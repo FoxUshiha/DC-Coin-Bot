@@ -3,6 +3,6 @@ credentials-file: ./coin-bot.json   # ou o nome do .json que você tem
 origincert: ./cert.pem
 
 ingress:
-  - hostname: coin.your_domain.me
+  - hostname: host.your-domain.dns
     service: http://localhost:26450
   - service: http_status:404

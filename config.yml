@@ -1,0 +1,227 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                       COIN BANK — config.yml                           ║
+# ║  Single configuration file (replaces the old .env).                    ║
+# ║  Arquivo único de configuração (substitui o antigo .env).              ║
+# ║                                                                        ║
+# ║  • Always put Discord IDs between quotes: "1234567890123456789"        ║
+# ║  • Sempre coloque IDs do Discord entre aspas.                          ║
+# ║  • Coin amounts are strings with up to 8 decimals: "0.00000012"        ║
+# ║  • Valores de coin são strings com até 8 casas decimais.               ║
+# ║  • Missing keys fall back to the defaults in lib/config.template.yml   ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+system:
+  # Start automatically when index.js is required/imported/executed.
+  # Liga automaticamente ao usar require/import/node index.js.
+  autostart: true
+  # Install SIGINT/SIGTERM/uncaught handlers (graceful shutdown).
+  handle_signals: true
+  # Folder for temporary files (cleaned periodically).
+  temp_dir: "temp"
+  # Time zone used on receipts / charts ("" = server time zone). Ex: "America/Sao_Paulo"
+  timezone: "America/Sao_Paulo"
+
+logging:
+  # debug | info | warn | error | silent
+  level: "info"
+  timestamps: true
+
+# ───────────────────────────── DISCORD BOT ─────────────────────────────
+discord:
+  enabled: true
+  token: "YOUR_TOKEN"
+  client_id: "YOUR_BOT_ID"
+  # Bot owners: full control (staff management, status, reminders...).
+  # Donos do bot: controle total.
+  owners: ["1551764651363270770"]
+  # Staff: can configure the bot in any guild, send reminders, view status.
+  # (Owners can also add/remove staff at runtime with /staff)
+  staff: []
+  # Accept "@Bot command args" in guilds and plain "command args" in DMs.
+  mention_commands: true
+  # Register commands ONLY globally and delete every per-guild copy.
+  purge_guild_commands: true
+  # Enable if "User Install" is turned on in the Developer Portal
+  # (commands then also work in any DM / group DM).
+  user_install: true
+  # DM the guild owner + the person who added the bot (EN + PT lines).
+  guild_join_dm: true
+  # Welcome DM for new members (needs the privileged "Server Members" intent).
+  welcome_new_members: false
+  # API protocol messages (active / bill / paybill / verify) also carry the
+  # machine-readable token (e.g. "123:true") as message content so other bots
+  # can parse them. The embed is always sent.
+  api_raw_token: true
+  embed_color: "#F1C40F"
+  presence:
+    status: "online"          # online | idle | dnd | invisible
+    activity: "/help • /ajuda"
+  # Per-user cooldown for @mention commands (anti-spam), milliseconds.
+  mention_cooldown_ms: 1500
+  links:
+    website: "https://bank.foxsrv.net/"
+    support: "https://discord.gg/C5cAfhcdRp"
+    terms: "https://bank.foxsrv.net/terms/"
+    privacy: "https://bank.foxsrv.net/terms/privacy.html"
+    docs: "https://bank.foxsrv.net/terms/documentation.html"
+    extension: "https://chromewebstore.google.com/detail/coin-bank/lbojdaalcfajcjphlpphjchkenjpbemf"
+    plugin: "https://www.spigotmc.org/resources/coin-card.129770/"
+    store: "https://coin.foxsrv.net/"
+    invite: "https://discord.com/oauth2/authorize?client_id=1391067775077978214&permissions=1126864127511616&integration_type=0&scope=bot"
+    donation_btc: "bc1qtj6j60mj8wtkzt35hzv44dvjy37tmcmn9pvjtc"
+
+# ───────────────────────────── ECONOMY ─────────────────────────────
+economy:
+  # Claim reward (coins, up to 8 decimals) and cooldown (ms).
+  claim_amount: "0.00000012"
+  claim_cooldown_ms: 3600000
+  # Minimum time between two transfers of the same account (ms).
+  transfer_cooldown_ms: 1000
+  # Maximum total supply in coins ("0" = unlimited). Bitcoin-like cap: "21000000".
+  max_supply: "0"
+  # Smallest amount accepted for transfers/bills (coins).
+  min_amount: "0.00000001"
+  # Account id used as the source of claims (minting).
+  system_id: "000000000000"
+  # Bills: default / min / max expiration (s, m, h, d).
+  bill_default_expiry: "90d"
+  bill_min_expiry: "1h"
+  bill_max_expiry: "182d"
+  # Wallet backup codes generated per account.
+  backup_codes: 4
+  # Card code size in bytes (6 bytes = 12 hex chars, compatible with old cards).
+  card_bytes: 6
+  # QR payment requests (mobile app): default / max lifetime and max open per account.
+  payment_request_default_expiry: "1d"
+  payment_request_max_expiry: "30d"
+  payment_request_max_open: 100
+
+# ───────────────────────────── HTTP API + SITE ─────────────────────────────
+api:
+  enabled: true
+  host: "0.0.0.0"
+  port: 26450
+  # Public base URL (used in receipt QR codes and links).
+  public_url: "https://bank.foxsrv.net"
+  # Serve the website from ./site
+  site_enabled: true
+  body_limit_kb: 16
+  # Login sessions expire after this many hours (requested: 24h).
+  session_ttl_hours: 24
+  max_sessions_per_user: 5
+  # Password hashing cost (scrypt N). 16384 ≈ 30-50 ms on a normal CPU.
+  scrypt_cost: 16384
+  # Expose /api/queue/info (internal metrics).
+  expose_internals: false
+  cors:
+    enabled: true
+    origins: ["*"]
+  # Fair async queue: requests wait (small delay) instead of failing.
+  queue:
+    max_concurrent: 512
+    max_waiting: 50000
+    max_waiting_per_ip: 256
+    wait_timeout_ms: 30000
+  # Token bucket per IP (IPv6 grouped by /64).
+  rate_limit:
+    per_ip_per_sec: 200
+    burst: 400
+    # Separate (strict) limit for heavy endpoints (receipts / charts PNG/PDF).
+    render_per_ip_per_min: 30
+    # Max tracked IPs in memory (oldest evicted first).
+    max_tracked_ips: 200000
+  register:
+    # Accounts that one IP (and one device cookie) can create per window.
+    per_ip: 30
+    window_hours: 1
+  login:
+    max_failures: 5
+    lock_seconds: 60
+  card:
+    # Wrong card codes per IP before a temporary lock (anti brute-force).
+    max_failures: 12
+    lock_seconds: 120
+  cache:
+    # Public statistics cache (ms).
+    stats_ttl_ms: 15000
+    rank_ttl_ms: 15000
+    recent_ttl_ms: 3000
+    history_ttl_ms: 60000
+    # Rendered PNG/PDF cache entries.
+    render_entries: 64
+  compression:
+    enabled: true
+    min_bytes: 1024
+
+# ───────────────────────────── CLOUDFLARE ─────────────────────────────
+cloudflare:
+  # Use CF-Connecting-IP / CF cookies when the request comes from Cloudflare
+  # (official IP ranges) or from cloudflared on the same machine (loopback).
+  enabled: true
+  trust_loopback: true
+  # Also trust X-Forwarded-For from these proxies (e.g. nginx on localhost).
+  trusted_proxies: ["127.0.0.1", "::1"]
+  # Named tunnel (cloudflared tunnel run <name>) — needs ./cloudflared files.
+  tunnel:
+    enabled: true
+    name: "coin-bot"
+    hostname: "bank.foxsrv.net"
+    credentials: "cloudflared/coin-bot.json"
+  # Free random https://*.trycloudflare.com URL (no account needed).
+  quick_tunnel:
+    enabled: false
+    local_host: "127.0.0.1"
+
+# ───────────────────────────── DATABASE ─────────────────────────────
+database:
+  file: "storage/database.db"
+  # Max operations committed together in one transaction (group commit).
+  write_batch_max: 2000
+  # In-memory LRU of accounts (write-through, always consistent).
+  cache_users: 50000
+  cache_sessions: 50000
+  cache_transactions: 5000
+  # SQLite page cache in KiB (negative pragma) — keep small for low RAM.
+  sqlite_cache_kb: 16384
+  mmap_mb: 64
+  checkpoint_minutes: 5
+  optimize_hours: 6
+  # Integrity audit: SUM(balances) must equal total minted coins.
+  audit_minutes: 30
+  backup:
+    enabled: true
+    dir: "playerList/backups"
+    interval_hours: 6
+    keep: 8
+
+# ───────────────────────────── RETENTION / CLEANUP ─────────────────────────────
+retention:
+  # Transactions older than this are deleted (0 = keep forever).
+  transactions_days: 30
+  dm_queue_days: 1
+  cleanup_minutes: 10
+  temp_files_minutes: 30
+
+# ───────────────────────────── DM QUEUE ─────────────────────────────
+dm_queue:
+  # Only runs while the Discord bot is online; paused otherwise.
+  enabled: true
+  # Delay between two DMs (Discord rate limits) in ms.
+  interval_ms: 1200
+  max_attempts: 3
+  # DM the receiver of every transfer (can be noisy for API/plugin payments).
+  notify_transfers: false
+  notify_bills: false
+  # DM the receiver when a QR payment request is paid.
+  notify_payments: false
+
+# ───────────────────────────── MEMORY OPTIMIZER ─────────────────────────────
+memory:
+  enabled: true
+  interval_seconds: 60
+  # Above this heap usage the optimizer trims caches aggressively + full GC.
+  heap_soft_limit_mb: 320
+  rss_soft_limit_mb: 450
+  # Try to enable GC even without --expose-gc.
+  force_gc: true
+  log_stats: false

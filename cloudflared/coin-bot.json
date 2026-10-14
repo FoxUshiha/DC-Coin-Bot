@@ -1,1 +1,1 @@
-{"AccountTag":"UUID","TunnelSecret":"SECRET_ID","TunnelID":"UUID_ENDPOIN","Endpoint":""}
+{"AccountTag":"YOUR_ID","TunnelSecret":"TUNNEL_SECRET_UUID","TunnelID":"TUNNEL_PUBLIC_ID","Endpoint":""}
