@@ -1,84 +1,18 @@
-// commands/api.js
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
-const { setServerApiChannel } = require('../database'); // <-- única importação de DB, correto
-
+'use strict';
+const { botCanPost } = require('./set');
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('api')
-    .setDescription('Sets the API channel.')
-    .addChannelOption(opt =>
-      opt
-        .setName('channel')
-        .setDescription('API text channel')
-        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
-        .setRequired(true)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-
-  async execute(interaction) {
-    // Previne timeout
-    await interaction.deferReply({ ephemeral: true }).catch(() => null);
-
-    try {
-      // Apenas em servidor
-      if (!interaction.guild) {
-        return interaction.editReply({
-          content: '❌ Use this in a Server.',
-        });
-      }
-
-      // Permissão: dono do servidor OU Administrador
-      const isOwner = interaction.user.id === interaction.guild.ownerId;
-      let isAdmin = false;
-      try {
-        if (interaction.member && interaction.member.permissions && typeof interaction.member.permissions.has === 'function') {
-          isAdmin = interaction.member.permissions.has(PermissionFlagsBits.Administrator);
-        }
-      } catch (permErr) {
-        isAdmin = false;
-      }
-
-      if (!isOwner && !isAdmin) {
-        return interaction.editReply({
-          content: '🚫 Only admins can use this command.',
-        });
-      }
-
-      const channel = interaction.options.getChannel('channel');
-
-      // Validar canal
-      if (!channel || !channel.isTextBased()) {
-        return interaction.editReply({
-          content: '❌ Use a valid channel.',
-        });
-      }
-
-      // Validar permissões do bot no canal
-      const botMember =
-        interaction.guild.members.me ??
-        interaction.guild.members.cache.get(interaction.client.user.id);
-
-      const perms = channel.permissionsFor(botMember);
-      if (!perms || !perms.has(PermissionFlagsBits.SendMessages)) {
-        return interaction.editReply({
-          content: '❌ No permission to send messages in that channel.',
-        });
-      }
-
-      // ============================
-      //  ARMAZENA NO database.js
-      // ============================
-      await setServerApiChannel(interaction.guild.id, channel.id);
-
-      return interaction.editReply({
-        content: `✅ API channel set to ${channel}.`,
-      });
-    } catch (err) {
-      console.error('❌ Command error /api:', err);
-      return interaction.editReply({
-        content:
-          '❌ An error has ocurred while performing that command, try again later.',
-      });
-    }
-  },
+  name: 'api', names: { pt: 'api' }, category: 'admin', guildOnly: true, perm: 'guildAdmin',
+  aliases: { en: ['apichannel'], pt: ['canalapi'] },
+  description: { en: 'Sets the API channel used by bots/plugins (active/bill/paybill/verify)', pt: 'Define o canal da API usado por bots/plugins (active/bill/paybill/verify)' },
+  options: [{ name: 'channel', names: { pt: 'canal' }, type: 'channel', required: true, description: { en: 'API text channel', pt: 'Canal de texto da API' } }],
+  async run(ctx, { logic, D }) {
+    const ch = await ctx.channelObj('channel');
+    if (!ch || !ch.isTextBased || !ch.isTextBased() || ch.guildId !== ctx.guildId) return ctx.fail(ctx.l('Choose a text channel of this server.', 'Escolha um canal de texto deste servidor.'));
+    if (!botCanPost(ctx, ch, D)) return ctx.error({ code: 'BOT_NO_PERMS' });
+    await logic.setGuild(ctx.guildId, { api_channel: ch.id });
+    const bot = ctx.client.user.username;
+    await ctx.ok(ctx.l('🔩 API channel set', '🔩 Canal da API definido'), ctx.l(
+      `API channel: <#${ch.id}>\nProtocol: \`@${bot} active <cardHash> <toId> <amount>\` · \`@${bot} bill <fromId> <toId> <amount> [time]\` · \`@${bot} paybill <billId>\` · \`@${bot} verify <id>\``,
+      `Canal da API: <#${ch.id}>\nProtocolo: \`@${bot} active <hashCartão> <idDestino> <valor>\` · \`@${bot} bill <idPagador> <idRecebedor> <valor> [tempo]\` · \`@${bot} paybill <idCobrança>\` · \`@${bot} verify <id>\``));
+  }
 };

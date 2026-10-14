@@ -1,123 +1,35 @@
-// commands/global.js
-const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-// Use apenas funções exportadas pelo database.js — nada de `db` direto aqui
-const {
-  getUser,
-  getCooldown,
-  fromSats,
-  // funções que devem existir no database.js:
-  getTotalCoins,
-  getTransactionCount,
-  getClaimCount,
-  getUserCount,
-  getBillCount
-} = require('../database');
-
+'use strict';
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('global')
-    .setDescription('Shows global economy information'),
-
-  async execute(interaction) {
-    try {
-      // 1) Defer the reply (non-ephemeral as original)
-      await interaction.deferReply({ ephemeral: false }).catch(() => null);
-
-      // 2) Gather global stats via database.js (await in case functions are async)
-      let totalCoins = 0;
-      let totalTx = 0;
-      let totalClaims = 0;
-      let totalUsers = 0;
-      let totalBills = 0;
-      let yourBalance = 0;
-
+  name: 'global', names: { pt: 'economia' }, category: 'economy', ephemeral: false,
+  aliases: { en: ['economy', 'stats', 'network'], pt: ['estatisticas', 'rede', 'mundo'] },
+  description: { en: 'Global economy statistics with network chart', pt: 'Estatísticas globais da economia com gráfico da rede' },
+  async run(ctx, { ui, logic }) {
+    const s = logic.stats();
+    const st = logic.claimStatus(ctx.userId);
+    const L = ctx.lang;
+    const fields = [
+      { name: ctx.l('🌐 Global balance', '🌐 Saldo global'), value: ui.coins(s.totalSats, L), inline: true },
+      { name: ctx.l('💰 Your balance', '💰 Seu saldo'), value: ui.coins(logic.balance(ctx.userId), L), inline: true },
+      { name: ctx.l('⏱️ Next reward', '⏱️ Próxima recompensa'), value: st.cooldownRemainingMs > 0 ? `<t:${Math.floor((Date.now() + st.cooldownRemainingMs) / 1000)}:R>` : ctx.l('🎉 NOW', '🎉 AGORA'), inline: true },
+      { name: ctx.l('🏦 Servers', '🏦 Servidores'), value: String(ctx.client ? ctx.client.guilds.cache.size : 0), inline: true },
+      { name: ctx.l('⭐ Users', '⭐ Usuários'), value: `${s.totalUsers} (+${s.newUsers24h} 24h)`, inline: true },
+      { name: ctx.l('👥 Active 24h', '👥 Ativos 24h'), value: String(s.activeUsers24h), inline: true },
+      { name: ctx.l('📖 Transactions', '📖 Transações'), value: `${s.totalTransactions} (${s.transactions24h} 24h)`, inline: true },
+      { name: ctx.l('📊 Volume 24h', '📊 Volume 24h'), value: ui.coins(s.volume24hSats, L), inline: true },
+      { name: ctx.l('📨 Claims', '📨 Resgates'), value: `${s.totalClaims} (${s.claims24h} 24h)`, inline: true },
+      { name: ctx.l('💳 Cards · Bills', '💳 Cartões · Cobranças'), value: `${s.totalCards} · ${s.openBills}`, inline: true },
+      { name: ctx.l('🎁 Reward', '🎁 Recompensa'), value: `${s.claimAmount} / ${logic.fmtDuration(s.claimCooldownMs, L)}`, inline: true },
+      { name: ctx.l('🏁 Max supply', '🏁 Oferta máxima'), value: s.maxSupply ? `${s.maxSupply}` : ctx.l('Unlimited', 'Ilimitada'), inline: true }
+    ];
+    const e = ui.embed(ctx, { title: ctx.l('🏆 Economy information', '🏆 Informações da economia'), description: ctx.l('🪙 Official Discord Coin System', '🪙 Sistema oficial de moedas do Discord'), fields });
+    const payload = { embeds: [e] };
+    if (logic.canRender()) {
       try {
-        totalCoins   = Number(await getTotalCoins()) || 0;
-        totalTx      = Number(await getTransactionCount()) || 0;
-        totalClaims  = Number(await getClaimCount()) || 0;
-        totalUsers   = Number(await getUserCount()) || 0;
-        totalBills   = Number(await getBillCount()) || 0;
-
-        const user = await getUser(interaction.user.id);
-        yourBalance = (user && typeof user.coins !== 'undefined') ? Number(user.coins) : 0;
-      } catch (err) {
-        console.error('⚠️ Failed to fetch global stats via database.js:', err);
-        return interaction.editReply({ content: '❌ Error retrieving global economy info.' });
-      }
-
-      // convert to human-readable
-      const displayTotalCoins  = fromSats(totalCoins);
-      const displayYourBalance = fromSats(yourBalance);
-
-      // 3) Calculate time until next reward using getCooldown (keeps original logic)
-      let nextRewardText = 'Unknown';
-      try {
-        const last       = await getCooldown(interaction.user.id);
-        const configPath = path.join(__dirname, '..', 'config.json');
-        let cooldownMs   = 24 * 60 * 60 * 1000;
-        if (fs.existsSync(configPath)) {
-          const allConf   = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-          const guildConf = allConf[interaction.guildId];
-          if (guildConf?.tempo) {
-            const m = guildConf.tempo.match(/(\d+)([dhm])/);
-            const v = m ? parseInt(m[1], 10) : 24;
-            cooldownMs = m[2] === 'h'
-              ? v * 3600000
-              : m[2] === 'm'
-                ? v * 60000
-                : v * 86400000;
-          }
-        }
-        const now = Date.now();
-        if (now - (last || 0) < cooldownMs) {
-          const diff = cooldownMs - (now - (last || 0));
-          const h = Math.floor(diff / 3600000);
-          const mm = Math.floor((diff % 3600000) / 60000);
-          nextRewardText = `\`${h}h ${mm}m\`⚠️`;
-        } else {
-          nextRewardText = '🎉 NOW 🎉';
-        }
-      } catch (err) {
-        console.warn('⚠️ Could not calculate next reward time:', err);
-      }
-
-      // 4) Count servers
-      const totalGuilds = interaction.client.guilds.cache.size;
-
-      // 5) Build a quoted-style message using human-readable balances
-      const lines = [
-        '# 🏆 Economy Information 🏆',
-        '',
-        `🌐 Global Balance: \`${displayTotalCoins}\` coins`,
-        `💰 Your Balance: \`${displayYourBalance}\` coins`,
-        `⏱️ Next Reward: ${nextRewardText}`,
-        `🏦 Servers: \`${totalGuilds}\` servers`,
-        `📖 Transactions: \`${totalTx}\``,
-        `💳 Bills: \`${totalBills}\` bills`,
-        `📨 Claims: \`${totalClaims}\` claims`,
-        `⭐ Coin Users: \`${totalUsers}\` users`,
-        '',
-        '🪙 Official Discord Coin System 🪙'
-      ];
-      const messageContent = lines.map(l => `> ${l}`).join('\n');
-
-      // 6) Send the result
-      await interaction.editReply({ content: messageContent });
-    } catch (err) {
-      // Unexpected error fallback
-      console.error('❌ Error in /global command:', err);
-      try {
-        if (!interaction.deferred && !interaction.replied) {
-          await interaction.reply({ content: '❌ Internal error. Please try again later.', ephemeral: true });
-        } else {
-          await interaction.editReply({ content: '❌ Internal error. Please try again later.' });
-        }
-      } catch (replyErr) {
-        console.error('❌ Failed to send fallback error in /global:', replyErr);
-      }
+        const buf = await logic.networkChart({ days: 14, lang: L, format: 'png' });
+        payload.files = [{ attachment: buf, name: 'network.png' }];
+        e.image = { url: 'attachment://network.png' };
+      } catch { /* stats only */ }
     }
-  },
+    await ctx.send(payload);
+  }
 };

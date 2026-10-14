@@ -1,38 +1,13 @@
-// commands/cardreset.js
-const { SlashCommandBuilder } = require('discord.js');
-const { resetCard } = require('../database');
-
+'use strict';
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('cardreset')
-    .setDescription('Generates a new card (overwrites the older one)'),
-  
-  async execute(interaction) {
-    // 1️⃣ Defer to avoid the 3s timeout, reply will be ephemeral
-    await interaction.deferReply({ ephemeral: true }).catch(() => null);
-
-    let code;
-    try {
-      // 2️⃣ Reset (or create) the card in the database
-      code = resetCard(interaction.user.id);
-    } catch (err) {
-      console.error('❌ [/cardreset] Failed to reset card:', err);
-      // 3️⃣ Inform the user of the error
-      return interaction.editReply({
-        content: '❌ Could not reset your card. Please try again later.'
-      });
-    }
-
-    // 4️⃣ Send the new card code
-    try {
-      await interaction.editReply({
-        content: `
-        ♻️ Your card was regenerated: ||\`\`\`${code}\`\`\`||
-        ♻️ Click: ||\`${code}\`||
-        `
-      });
-    } catch (err) {
-      console.error('❌ [/cardreset] Failed to send response:', err);
-    }
-  },
+  name: 'cardreset', names: { pt: 'resetarcartao' }, category: 'account',
+  aliases: { en: ['newcard', 'resetcard'], pt: ['novocartao', 'resetarcartão'] },
+  description: { en: 'Generates a new card (the old code stops working)', pt: 'Gera um novo cartão (o código antigo deixa de funcionar)' },
+  async run(ctx, { ui, logic }) {
+    const code = await logic.resetCard(ctx.userId);
+    await ctx.sendPrivate({ embeds: [ui.embed(ctx, {
+      title: ctx.l('♻️ Card regenerated', '♻️ Cartão regenerado'), color: ui.COLORS.purple,
+      description: `||\`\`\`${code}\`\`\`||\n${ctx.l('The previous code was invalidated.', 'O código anterior foi invalidado.')}`
+    })] });
+  }
 };

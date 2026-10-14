@@ -1,308 +1,175 @@
-<!doctype html>
-<html lang="en-US">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coin — API Docs (complete)</title>
-  <style>
-    :root{
-      --bg: #2f3136;
-      --panel: #202225;
-      --embed: #2f3136;
-      --muted: #99a0a6;
-      --text: #dfe6ee;
-      --accent: #7289da;
-      --glass: rgba(255,255,255,0.02);
-      --radius: 12px;
-      --pad: 24px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-      --max-width: 1100px;
-      --code-bg: rgba(0,0,0,0.35);
-      --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-
-html,body{ height:100%; margin:0; background: linear-gradient(180deg, #232428 0%, #1d1f22 100%); color:var(--text); font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; font-size:15px; line-height:1.55; }
-
-.overlay { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px; box-sizing:border-box; }
-.embed { width:100%; max-width:var(--max-width); border-radius:var(--radius); background: linear-gradient(180deg, rgba(47,49,54,0.98), rgba(31,33,36,0.98)); box-shadow: var(--card-shadow), inset 0 1px rgba(255,255,255,0.02); overflow:hidden; display:flex; gap:0; border:1px solid rgba(255,255,255,0.02); }
-.stripe { width:10px; background: linear-gradient(180deg, #6b9bff 0%, var(--accent) 100%); flex:0 0 10px; }
-.content { padding:var(--pad); box-sizing:border-box; flex:1 1 auto; display:flex; flex-direction:column; min-height:420px; max-height:80vh; }
-.header { display:flex; align-items:flex-start; gap:16px; margin-bottom:8px; }
-.titles { flex:1 1 auto; }
-.title { margin:0; font-size:20px; font-weight:700; color:var(--text); }
-.subtitle { margin:4px 0 0 0; font-size:13px; color:var(--muted); }
-.meta-links { margin-top:10px; display:flex; gap:12px; flex-wrap:wrap; }
-.meta-links a { color: var(--accent); text-decoration:none; font-size:13px; border: 1px solid rgba(255,255,255,0.02); padding:6px 10px; border-radius:8px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); }
-
-.doc-body { margin-top:12px; background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.06)); padding:18px; border-radius:10px; overflow:auto; box-shadow: inset 0 1px rgba(255,255,255,0.01); flex:1 1 auto; }
-.toc { margin:0 0 18px 0; padding:12px; border-radius:8px; background: rgba(0,0,0,0.12); border:1px solid rgba(255,255,255,0.02); color:var(--muted); font-size:14px; }
-.toc a { color: var(--accent) !important; text-decoration: none; }
-.toc a:hover { color: #8fb1ff !important; }
-.section { margin-bottom:20px; }
-.section h2 { margin:0 0 8px 0; font-size:17px; color:var(--text); border-bottom:1px solid rgba(255,255,255,0.02); padding-bottom:8px; }
-.section h3 { margin:12px 0 4px 0; font-size:15px; color:var(--text); }
-pre, code { font-family: var(--mono); font-size:13px; }
-pre { background: var(--code-bg); padding:12px; border-radius:8px; overflow:auto; color: #e6eef6; border:1px solid rgba(255,255,255,0.03); margin:12px 0; position:relative; }
-code.inline { background: rgba(0,0,0,0.25); padding:3px 6px; border-radius:6px; color:var(--text); }
-.label { display:inline-block; font-size:12px; padding:4px 8px; border-radius:6px; background:rgba(0,0,0,0.12); color:var(--muted); border:1px solid rgba(255,255,255,0.02); margin-right:8px; }
-.endpoint-block { border-left:3px solid var(--accent); padding-left:14px; margin:18px 0; }
-.footer { margin-top:12px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
-
-@media (max-width:820px){ :root { --pad:16px; } .content { padding:18px; } }
-@media (max-width:640px){ .embed { border-radius:10px; margin:6px; } .stripe { display:none; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Coin — Documentação da API / API Docs</title>
+<meta name="description" content="Referência completa da API Coin: todos os endpoints, formatos de requisição/resposta, fila, txId, erros, páginas do site e endpoints planejados. / Complete Coin API reference.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Coin Bank">
+<meta property="og:title" content="Coin — Documentação da API / API Docs">
+<meta property="og:description" content="Referência completa da API Coin: todos os endpoints, formatos de requisição/resposta, fila, txId, erros, páginas do site e endpoints planejados. / Complete Coin API reference.">
+<meta property="og:image" content="https://bank.foxsrv.net/coin-bank-embed.png">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/coin-icon.png">
+<script>(function(){try{var c=document.cookie,m=c.match(/(?:^|; )coin_theme=([^;]*)/),t=m?decodeURIComponent(m[1]):'auto';if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var l=c.match(/(?:^|; )coin_lang=([^;]*)/),g=l?l[1]:((navigator.language||'').toLowerCase().indexOf('pt')===0?'pt':'en');document.documentElement.lang=g==='pt'?'pt-BR':'en';}catch(e){}})();</script>
+<style>
+:root{--bg:#eceef1;--card:#fff;--card2:#f4f5f7;--fg:#14161a;--fg2:#555b65;--fg3:#8b919b;--line:#dfe2e7;--gold:#a9802a;--goldsoft:rgba(169,128,42,.12);--ok:#0f8a5b;--oksoft:rgba(15,138,91,.11);--info:#3567c9;--infosoft:rgba(53,103,201,.1);--warn:#b26f00;--warnsoft:rgba(178,111,0,.12);--bad:#d0353b;--code:#f1f3f5;--shadow:0 1px 2px rgba(17,20,24,.05),0 6px 22px rgba(17,20,24,.06);--mono:ui-monospace,SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace}
+:root[data-theme="dark"]{--bg:#101113;--card:#191b1e;--card2:#212328;--fg:#e8eaed;--fg2:#a6acb5;--fg3:#717883;--line:#2a2d33;--gold:#d6a94b;--goldsoft:rgba(214,169,75,.14);--ok:#2fbf80;--oksoft:rgba(47,191,128,.13);--info:#6b9cff;--infosoft:rgba(107,156,255,.13);--warn:#e2a330;--warnsoft:rgba(226,163,48,.14);--bad:#f05a60;--code:#121316;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html,body{margin:0}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--fg);font:15.5px/1.65 Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+html[lang^="pt"] [data-l="en"],html[lang="en"] [data-l="pt"]{display:none!important}
+a{color:var(--info)}
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;height:62px;padding:0 16px;display:flex;align-items:center;gap:10px}
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--fg);font-weight:800;font-size:16.5px;letter-spacing:-.2px;margin-right:auto;white-space:nowrap}
+.brand img{width:34px;height:34px}
+.brand small{display:block;font-size:10.5px;color:var(--fg3);font-weight:650;letter-spacing:.6px;text-transform:uppercase;line-height:1}
+.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:8px 12px;border-radius:9px;color:var(--fg2);text-decoration:none;font-weight:650;font-size:14px;white-space:nowrap}
+.nav a:hover{background:var(--card2);color:var(--fg)}
+.nav a.on{background:var(--card2);color:var(--fg);box-shadow:inset 0 -2px 0 var(--gold)}
+.ib{height:38px;min-width:38px;padding:0 11px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:750;font-size:12.5px;cursor:pointer;flex:none}
+.ib:hover{background:var(--card2)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 60px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.toc{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);font-size:13.5px}
+.toc h4{margin:0 0 8px;font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--fg3)}
+.toc a{display:block;padding:5px 9px;border-radius:8px;color:var(--fg2);text-decoration:none;line-height:1.35}
+.toc a:hover{background:var(--card2);color:var(--fg)}
+.toc a.on{background:var(--goldsoft);color:var(--fg);font-weight:650}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:34px 40px;min-width:0}
+.hero{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:8px}
+.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;font-weight:750;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);background:var(--goldsoft);padding:4px 10px;border-radius:999px}
+.hero h1{font-size:32px;letter-spacing:-.8px;line-height:1.15;margin:12px 0 8px}
+.hero p{color:var(--fg2);margin:0;font-size:16px}
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--fg3)}
+section{padding-top:18px}
+h2{font-size:20px;letter-spacing:-.3px;margin:22px 0 10px;display:flex;gap:10px;align-items:baseline}
+h2 .n{color:var(--gold);font-size:14px;font-weight:800;min-width:26px}
+h3{font-size:16px;margin:20px 0 6px}
+p,li{color:var(--fg2)} strong{color:var(--fg)}
+ul,ol{padding-left:22px} li{margin:4px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:2px 6px;border-radius:6px;border:1px solid var(--line);color:var(--fg)}
+pre{position:relative;background:var(--code);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;margin:10px 0 14px}
+pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.55;color:var(--fg)}
+.cpy{position:absolute;top:8px;right:8px;border:1px solid var(--line);background:var(--card);color:var(--fg2);border-radius:8px;padding:3px 9px;font-size:11.5px;font-weight:700;cursor:pointer;opacity:.85}
+.notice{background:var(--goldsoft);border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);border-radius:12px;padding:12px 16px;color:var(--fg);margin:18px 0}
+.notice.info{background:var(--infosoft);border-color:color-mix(in srgb,var(--info) 30%,transparent)}
+.ep{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0;background:color-mix(in srgb,var(--card2) 50%,var(--card))}
+.ep-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.ep-h code{font-size:14px;font-weight:700;background:none;border:0;padding:0}
+.m{font-size:11px;font-weight:800;letter-spacing:.6px;padding:3px 8px;border-radius:6px;font-family:var(--mono)}
+.m.get{background:var(--oksoft);color:var(--ok)} .m.post{background:var(--infosoft);color:var(--info)}
+.tag{font-size:11px;font-weight:750;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--fg2);background:var(--card)}
+.tag.auth{color:var(--warn);background:var(--warnsoft);border-color:transparent} .tag.soon{color:var(--gold);background:var(--goldsoft);border-color:transparent} .tag.pub{color:var(--ok);background:var(--oksoft);border-color:transparent}
+.ep p{margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 16px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--fg3)}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--fg3)}
+.pfoot{text-align:center;font-size:12.5px;color:var(--fg3);padding:0 16px 30px}
+.pfoot a{color:var(--fg2);text-decoration:none;margin:0 8px}
+.totop{position:fixed;right:18px;bottom:18px;width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);box-shadow:var(--shadow);cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;font-size:18px}
+.totop.on{opacity:1;pointer-events:auto}
+.toast{position:fixed;top:76px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:12px;padding:10px 16px;font-weight:650;font-size:14px;z-index:30}
+@media (max-width:960px){.wrap{grid-template-columns:1fr}.toc{position:static;max-height:none}.toc-list{columns:2;column-gap:12px}}
+@media (max-width:640px){.doc{padding:22px 18px;border-radius:14px}.hero h1{font-size:25px}.nav{display:none}.toc-list{columns:1}.brand small{display:none}}
+@media print{.top,.toc,.totop,.pfoot{display:none}.wrap{display:block;padding:0}.doc{border:0;box-shadow:none}body{background:#fff}}
+</style>
 </head>
 <body>
-  <div class="overlay" role="dialog" aria-labelledby="docTitle">
-    <div class="embed" role="document" aria-label="Coin API Documentation">
-      <div class="stripe" aria-hidden="true"></div>
-      <div class="content">
-        <div class="header">
-          <div class="titles">
-            <h1 id="docTitle" class="title">Coin API — Complete Reference</h1>
-            <div class="subtitle">All endpoints, request/response shapes and behavior derived from <code class="inline">api.js</code> and <code class="inline">logic.js</code>.</div>
-            <div class="meta-links" style="margin-top:10px;">
-              <a href="/" rel="noreferrer">Coin Website</a>
-              <a href="/terms/privacy.html" rel="noreferrer">Privacy Policy</a>
-              <a href="/terms/documentation.html" rel="noreferrer">API Documentation</a>
-              <a href="/terms/" rel="noreferrer">Terms of Use</a>
-              <a href="https://github.com/FoxUshiha/DC-Coin-Bot" rel="noreferrer">GitHub Repo</a>
-            </div>
-          </div>
-        </div>
+<header class="top"><div class="top-in">
+  <a class="brand" href="/"><img src="/coin-icon.png" alt=""><span>Coin Bank<small>Docs &amp; Legal</small></span></a>
+  <nav class="nav">
+    <a href="/"><span data-l="pt">Site</span><span data-l="en">Website</span></a>
+    <a href="/terms/" class=""><span data-l="pt">Termos</span><span data-l="en">Terms</span></a>
+    <a href="/terms/privacy.html" class=""><span data-l="pt">Privacidade</span><span data-l="en">Privacy</span></a>
+    <a href="/terms/documentation.html" class=" on"><span data-l="pt">Documentação</span><span data-l="en">API Docs</span></a>
+    <a href="https://github.com/FoxUshiha/DC-Coin-Bot" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="ib" id="langBtn" type="button">PT</button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Theme">☾</button>
+</div></header>
+<div class="wrap">
+  <aside class="toc"><h4><span data-l="pt">Nesta página</span><span data-l="en">On this page</span></h4><div class="toc-list" id="toc"></div></aside>
+  <article class="doc" id="doc">
+<!--TITLE:Coin — Documentação da API / API Docs-->
+<!--TITLE_PT:Coin — Documentação da API-->
+<!--TITLE_EN:Coin — API Docs (complete)-->
+<!--DESC:Referência completa da API Coin: todos os endpoints, formatos de requisição/resposta, fila, txId, erros, páginas do site e endpoints planejados. / Complete Coin API reference.-->
+<!--UPDATED:2026-10-12-->
+<div class="hero"><span class="eyebrow">{ } API</span>
+<h1><span data-l="pt">Coin API — Referência completa</span><span data-l="en">Coin API — Complete Reference</span></h1>
+<p><span data-l="pt">Todos os endpoints, formatos de requisição/resposta e comportamentos derivados de <code>api.js</code> e <code>logic.js</code>.</span><span data-l="en">All endpoints, request/response shapes and behavior derived from <code>api.js</code> and <code>logic.js</code>.</span></p>
+<div class="meta"><span>Base URL: <code>https://bank.foxsrv.net</code></span><span>Content-Type: <code>application/json</code></span></div></div>
 
-        <div class="doc-body" id="docBody">
-          <!-- TOC -->
-          <div class="toc" aria-label="Table of contents">
-            <h4>Table of contents</h4>
-            <ol>
-              <li><a href="#overview">Overview</a></li>
-              <li><a href="#auth">Authentication</a></li>
-              <li><a href="#queue">Queue &amp; idempotency</a></li>
-              <li><a href="#endpoints">Endpoints (complete list)</a></li>
-              <li><a href="#txid">txId: generation &amp; when responses include it</a></li>
-              <li><a href="#errors">Errors &amp; status codes</a></li>
-              <li><a href="#appendix">Appendix — op names</a></li>
-            </ol>
-          </div>
+<section id="overview"><h2><span class="n">1</span><span data-l="pt">Visão geral</span><span data-l="en">Overview</span></h2><p data-l="pt">Esta documentação espelha exatamente o comportamento implementado nos arquivos do servidor (<code>api.js</code> e <code>logic.js</code>).</p><p data-l="en">This documentation mirrors the exact behavior implemented in the server files (<code>api.js</code> and <code>logic.js</code>).</p><p data-l="pt">Arquitetura: a API HTTP enfileira as operações em uma fila limitada em memória (com persistência opcional no banco para jobs pendentes) e então aguarda o resultado do worker ou devolve uma resposta no formato legado, para compatibilidade. A fila anexa um <code>txId</code> aos payloads para idempotência; se esse <code>txId</code> aparece na resposta HTTP depende das regras de mapeamento por rota implementadas em <code>doEnqueueAndMap</code>.</p><p data-l="en">Key architecture: the HTTP API enqueues write operations into a bounded in-memory queue (with optional DB persistence for pending jobs) and then either waits for the queue worker result or returns a legacy-shaped response for backward compatibility. The queue attaches a <code>txId</code> to payloads for idempotency; whether that <code>txId</code> appears in the HTTP response depends on per-route mapping rules implemented in <code>doEnqueueAndMap</code>.</p><p data-l="pt">Valores: as Coins usam 8 casas decimais (1 coin = 100.000.000 sats). Os endpoints de cartão truncam o valor para 8 casas (<code>Math.floor(amount * 1e8) / 1e8</code>).</p><p data-l="en">Amounts: Coins use 8 decimal places (1 coin = 100,000,000 sats). Card endpoints truncate the amount to 8 decimals (<code>Math.floor(amount * 1e8) / 1e8</code>).</p></section>
 
-          <!-- Overview -->
-          <section id="overview" class="section">
-            <h2>1) Overview</h2>
-            <p>This documentation mirrors the exact behavior implemented in the server files (<code>api.js</code> and <code>logic.js</code>).</p>
-            <p>Key architecture: the HTTP API enqueues write operations into a bounded in‑memory queue (with optional DB persistence for pending jobs) and then either waits for the queue worker result or returns a legacy‑shaped response for backward compatibility. The queue attaches a <code>txId</code> to payloads for idempotency; whether that <code>txId</code> appears in the HTTP response depends on per‑route mapping rules implemented in <code>doEnqueueAndMap</code>.</p>
-          </section>
+<section id="auth"><h2><span class="n">2</span><span data-l="pt">Autenticação</span><span data-l="en">Authentication</span></h2><p data-l="pt">Endpoints que exigem autenticação usam o cabeçalho <strong>Authorization</strong> com o token de sessão:</p><p data-l="en">Endpoints that require authentication use an <strong>Authorization</strong> header with a session token:</p><pre><code>Authorization: Bearer &lt;sessionId&gt;
+Content-Type: application/json</code></pre><p data-l="pt">O middleware resolve a sessão com <code>db.getSession</code> e define <code>req.userId</code>. Se a sessão for inválida, a rota responde <code>403</code> com <code>{ error: "operation failed" }</code>. O <code>sessionId</code> é obtido em <code>POST /api/login</code> ou <code>POST /api/register</code>.</p><p data-l="en">The middleware resolves the session using <code>db.getSession</code> and sets <code>req.userId</code>. If the session is invalid the route returns <code>403</code> with <code>{ error: "operation failed" }</code>. The <code>sessionId</code> comes from <code>POST /api/login</code> or <code>POST /api/register</code>.</p><div class="notice info"><span data-l="pt">O site oficial guarda o token no <code>localStorage</code> (<code>session</code>) e nos cookies <code>coin_sid</code>/<code>coin_uid</code>. Uma futura versão do servidor pode ler esse cookie diretamente (ex.: como alternativa ao cabeçalho), sem mudança no front-end.</span><span data-l="en">The official website stores the token in <code>localStorage</code> (<code>session</code>) and in the <code>coin_sid</code>/<code>coin_uid</code> cookies. A future server version can read that cookie directly (e.g. as an alternative to the header) with no front-end change.</span></div></section>
 
-          <!-- Auth -->
-          <section id="auth" class="section">
-            <h2>2) Authentication</h2>
-            <p>Endpoints that require authentication use an <strong>Authorization</strong> header with a session token:</p>
-            <pre><code>Authorization: Bearer &lt;sessionId&gt;
-Content-Type: application/json</code></pre>
-            <p>The middleware resolves the session using <code>db.getSession</code> and sets <code>req.userId</code>. If the session is invalid the route returns <code>403</code> with <code>{ error: "operation failed" }</code>.</p>
-          </section>
+<section id="queue"><h2><span class="n">3</span><span data-l="pt">Fila e idempotência</span><span data-l="en">Queue &amp; idempotency</span></h2><div data-l="pt"><ul><li>O servidor usa <code>queue.enqueueAndWait(payload)</code>. Antes de enfileirar, <code>doEnqueueAndMap</code> garante <code>payload.args.ip</code> e anexa <code>payload.txId</code> = UUID aleatório se não informado.</li><li>Se a fila recusar com <code>ENQUEUE_REJECTED</code>, o wrapper tenta um cache em memória e um job pendente no banco. Se isso também falhar, a API responde <code>429</code> / <code>{ error: "QUEUE_FULL" }</code>. O worker de cache depois despeja os itens pendentes na fila.</li><li>Rotas que passam por <code>doEnqueueAndMap</code> também aplicam limite por IP (token bucket: <code>RATE_LIMIT_PER_IP</code>/s, rajada <code>RATE_LIMIT_BURST</code>, padrão 10) → <code>429 RATE_LIMIT_EXCEEDED</code>.</li><li>Mapeamento legado por rota:<ul><li><code>legacyReturn: 'transfer'</code> → resposta sempre <code>{ success: true }</code> (oculta o txId).</li><li><code>legacyReturn: 'transfer_card'</code> → <code>{ success: true, txId?, date? }</code> se o resultado do worker tiver <code>txId</code>; caso contrário <code>{ success: true }</code>.</li><li>Padrão (sem legacyReturn) → devolve o resultado do worker como está.</li></ul></li></ul></div><div data-l="en"><ul><li>The server uses <code>queue.enqueueAndWait(payload)</code>. Before enqueueing, <code>doEnqueueAndMap</code> ensures <code>payload.args.ip</code> is set and attaches <code>payload.txId</code> = a random UUID if not provided.</li><li>If the queue refuses with <code>ENQUEUE_REJECTED</code> the wrapper attempts an in-memory cache and a DB pending job. If that also fails, the API returns <code>429</code> / <code>{ error: "QUEUE_FULL" }</code>. The cache worker later flushes pending items into the queue.</li><li>Routes going through <code>doEnqueueAndMap</code> also apply a per-IP rate limit (token bucket: <code>RATE_LIMIT_PER_IP</code>/s, burst <code>RATE_LIMIT_BURST</code>, default 10) → <code>429 RATE_LIMIT_EXCEEDED</code>.</li><li>Per-route legacy mapping:<ul><li><code>legacyReturn: 'transfer'</code> → response is always <code>{ success: true }</code> (hides txId).</li><li><code>legacyReturn: 'transfer_card'</code> → response is <code>{ success: true, txId?, date? }</code> if the worker result contains a <code>txId</code>, otherwise <code>{ success: true }</code>.</li><li>Default (no legacyReturn) → returns the worker result as-is.</li></ul></li></ul></div></section>
 
-          <!-- Queue -->
-          <section id="queue" class="section">
-            <h2>3) Queue &amp; idempotency</h2>
-            <ul>
-              <li>The server uses <code>queue.enqueueAndWait(payload)</code>. Before enqueueing, <code>doEnqueueAndMap</code> ensures <code>payload.args.ip</code> is set and attaches <code>payload.txId</code> = a random UUID if not provided.</li>
-              <li>If the queue refuses with <code>ENQUEUE_REJECTED</code> the wrapper attempts an in‑memory cache and a DB pending job. If that also fails, the API returns <code>429</code> / <code>{ error: "QUEUE_FULL" }</code>. The cache worker later flushes pending items into the queue.</li>
-              <li>Per‑route legacy mapping:
-                <ul>
-                  <li><code>legacyReturn: 'transfer'</code> → response is always <code>{ success: true }</code> (hides txId).</li>
-                  <li><code>legacyReturn: 'transfer_card'</code> → response is <code>{ success: true, txId?, date? }</code> if the worker result contains a <code>txId</code>, otherwise <code>{ success: true }</code>.</li>
-                  <li>Default (no legacyReturn) → returns the worker result as‑is.</li>
-                </ul>
-              </li>
-            </ul>
-          </section>
-
-          <!-- Endpoints -->
-          <section id="endpoints" class="section">
-            <h2>4) Endpoints (complete list)</h2>
-
-            <!-- AUTH -->
-            <div class="endpoint-block">
-              <h3>POST /api/login</h3>
-              <p><strong>Description:</strong> Authenticates a user and creates a session. The server hashes the password using SHA‑256 before checking.</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+<section id="endpoints"><h2><span class="n">4</span><span data-l="pt">Endpoints (lista completa)</span><span data-l="en">Endpoints (complete list)</span></h2><h3><span data-l="pt">Conta e sessão</span><span data-l="en">Account &amp; session</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/login</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Autentica um usuário e cria uma sessão. O servidor aplica SHA-256 na senha antes de verificar.</p><p data-l="en">Authenticates a user and creates a session. The server hashes the password using SHA-256 before checking.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "username": "alice",
   "password": "secret"
-}</code></pre>
-              <p><strong>Response (success):</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta (sucesso):</strong></p><p data-l="en"><strong>Response (success):</strong></p><pre><code>{
   "sessionCreated": true,
   "passwordCorrect": true,
   "userId": "123456789012345678",
   "sessionId": "&lt;session-token&gt;",
   "saldo": 12.345678,
   "cooldownRemainingMs": 0
-}</code></pre>
-              <p>If IP is locked due to too many failed attempts, returns <code>429</code> with <code>error: "IP blocked. Try again in X seconds."</code>.</p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/register</h3>
-              <p><strong>Description:</strong> Creates a new user. Enforces a 1‑second IP registration cooldown (24h block in code, but currently set to 1s).</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Se o IP estiver bloqueado por excesso de tentativas, responde <code>429</code> com <code>error: "IP blocked. Try again in X seconds."</code>. Credenciais erradas: <code>sessionCreated: false, passwordCorrect: false</code>. Campos ausentes: <code>400</code>.</p><p data-l="en">If IP is locked due to too many failed attempts, returns <code>429</code> with <code>error: "IP blocked. Try again in X seconds."</code>. Wrong credentials: <code>sessionCreated: false, passwordCorrect: false</code>. Missing fields: <code>400</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/register</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Cria um novo usuário e já devolve uma sessão. Aplica cooldown de cadastro por IP (bloqueio de 24h no código, atualmente configurado para 1 s).</p><p data-l="en">Creates a new user and returns a session. Enforces an IP registration cooldown (24h block in code, currently set to 1s).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "username": "bob",
   "password": "s3cret"
-}</code></pre>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "success": true,
   "userId": "987654321",
   "sessionId": "&lt;session-token&gt;"
-}</code></pre>
-              <p>Errors: <code>409</code> if username already taken, <code>429</code> if IP blocked or queue full.</p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/logout</h3>
-              <p><strong>Description:</strong> Deletes the session token provided in the Authorization header.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/account/change</h3>
-              <p><strong>Description:</strong> Changes the username and/or password for the authenticated user. Requires both username and password in the body.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Erros: <code>409</code> se o usuário já existir, <code>429</code> se o IP estiver bloqueado (<code>Block: …</code>) ou a fila cheia, <code>400</code> se faltar usuário/senha.</p><p data-l="en">Errors: <code>409</code> if username already taken, <code>429</code> if IP blocked (<code>Block: …</code>) or queue full, <code>400</code> if username/password missing.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/logout</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Exclui o token de sessão informado no cabeçalho Authorization.</p><p data-l="en">Deletes the session token provided in the Authorization header.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/account/change</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Altera a senha e, opcionalmente, o nome de usuário do usuário autenticado. <code>password</code> é obrigatório; <code>username</code> é opcional. A sessão atual é encerrada após a alteração.</p><p data-l="en">Changes the password and, optionally, the username of the authenticated user. <code>password</code> is required; <code>username</code> is optional. The current session is deleted after the change.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "username": "newalice",
   "password": "newpass"
-}</code></pre>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/account/unregister</h3>
-              <p><strong>Description:</strong> Deletes the user account (clears username/password and removes the session).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/account/update</h3>
-              <p><strong>Description:</strong> Updates the username and password hash for the user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/account/unregister</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Exclui a conta do usuário (limpa usuário/senha e remove a sessão).</p><p data-l="en">Deletes the user account (clears username/password and removes the session).</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/account/update</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Atualiza o nome de usuário e o hash da senha do usuário.</p><p data-l="en">Updates the username and password hash for the user.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "username": "alice",
   "passwordHash": "sha256 hash"
-}</code></pre>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <!-- TRANSFERS -->
-            <div class="endpoint-block">
-              <h3>POST /api/transfer</h3>
-              <p><strong>Description:</strong> Transfers coins from the authenticated user to another user. This endpoint uses legacy response (hides txId).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><h3><span data-l="pt">Transferências</span><span data-l="en">Transfers</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/transfer</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Transfere coins do usuário autenticado para outro usuário. Usa resposta legada (oculta o txId).</p><p data-l="en">Transfers coins from the authenticated user to another user. This endpoint uses legacy response (hides txId).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "toId": "987654321",
   "amount": 0.001
-}</code></pre>
-              <p><strong>Response:</strong> <code>{ success: true }</code> (txId hidden).</p>
-              <p><strong>Note:</strong> If you need the txId, either supply your own <code>txId</code> in the body or use the card‑based endpoint.</p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/transfer/card</h3>
-              <p><strong>Description:</strong> Transfers coins using a card code. Resolves the owner from the card hash. May return txId if available.</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre><p data-l="pt"><strong>Nota:</strong> se precisar do txId, envie seu próprio <code>txId</code> no corpo ou use o endpoint por cartão. O site oficial localiza a transação em <code>GET /api/transactions?page=1</code> logo após o envio para gerar o comprovante. Falha: <code>400 { error: "operation failed" }</code>.</p><p data-l="en"><strong>Note:</strong> if you need the txId, either supply your own <code>txId</code> in the body or use the card-based endpoint. The official website finds the transaction in <code>GET /api/transactions?page=1</code> right after sending to build the receipt. Failure: <code>400 { error: "operation failed" }</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/transfer/card</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Transfere coins usando um código de cartão. O dono é resolvido pelo hash do cartão. Pode devolver txId.</p><p data-l="en">Transfers coins using a card code. Resolves the owner from the card hash. May return txId if available.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "cardCode": "abcd-efgh-1234",
   "toId": "11111",
   "amount": 0.01
-}</code></pre>
-              <p><strong>Response (if txId available):</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta (com txId):</strong></p><p data-l="en"><strong>Response (if txId available):</strong></p><pre><code>{
   "success": true,
   "txId": "uuid-12345-abcdef",
   "date": "2025-12-07T12:00:00.000Z"
-}</code></pre>
-              <p><strong>Response (legacy fallback):</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/card/pay</h3>
-              <p><strong>Description:</strong> Card‑to‑card transfer (alias of <code>/api/transfer_between_cards</code>).</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Resposta legada: <code>{ success: true }</code>. Cartão não encontrado: <code>404 { success: false }</code>; saldo insuficiente: <code>402</code>.</p><p data-l="en">Legacy fallback: <code>{ success: true }</code>. Card not found: <code>404 { success: false }</code>; insufficient funds: <code>402</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/card/pay</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Transferência cartão-para-cartão (alias de <code>transfer_between_cards</code>). Usado pelo site na opção "Transferir → Cartão Coin".</p><p data-l="en">Card-to-card transfer (alias of <code>transfer_between_cards</code>). Used by the website in "Transfer → Coin card".</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "fromCard": "abcd-ef",
   "toCard": "wxyz-12",
   "amount": 0.002
-}</code></pre>
-              <p><strong>Response:</strong> same as <code>/api/transfer/card</code>.</p>
-            </div>
-
-            <!-- CLAIM -->
-            <div class="endpoint-block">
-              <h3>POST /api/claim</h3>
-              <p><strong>Description:</strong> Claims the daily (or configured) reward. Respects cooldown set in <code>claimConfig</code>.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response (success):</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true, "txId": "…", "date": "…" }</code></pre><p data-l="pt">Mesma forma de <code>/api/transfer/card</code>. Erros: <code>404 FROM_CARD_NOT_FOUND</code> / <code>TO_CARD_NOT_FOUND</code>, <code>402 INSUFFICIENT_FUNDS</code>.</p><p data-l="en">Same as <code>/api/transfer/card</code>. Errors: <code>404 FROM_CARD_NOT_FOUND</code> / <code>TO_CARD_NOT_FOUND</code>, <code>402 INSUFFICIENT_FUNDS</code>.</p></div><h3><span data-l="pt">Recompensa (claim)</span><span data-l="en">Claim</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/claim</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Resgata a recompensa diária (ou configurada). Respeita o cooldown definido em <code>claimConfig</code>.</p><p data-l="en">Claims the daily (or configured) reward. Respects cooldown set in <code>claimConfig</code>.</p><p data-l="pt"><strong>Resposta (sucesso):</strong></p><p data-l="en"><strong>Response (success):</strong></p><pre><code>{
   "success": true,
   "claimed": 0.05
-}</code></pre>
-              <p><strong>Response (cooldown):</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta (cooldown):</strong></p><p data-l="en"><strong>Response (cooldown):</strong></p><pre><code>{
   "error": "Cooldown active",
   "nextClaimInMs": 12345,
   "cooldownMs": 86400000,
   "lastClaimTs": 1234567890
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>GET /api/claim/status</h3>
-              <p><strong>Description:</strong> Returns the remaining cooldown for the authenticated user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Dependendo de como <code>logic.claimCoins</code> sinaliza o cooldown, a resposta pode chegar como <code>500 { error: "Internal error" }</code>; clientes devem consultar <code>GET /api/claim/status</code> após uma falha (o site oficial faz isso).</p><p data-l="en">Depending on how <code>logic.claimCoins</code> signals the cooldown, the response may arrive as <code>500 { error: "Internal error" }</code>; clients should query <code>GET /api/claim/status</code> after a failure (the official website does).</p></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/claim/status</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Retorna o cooldown restante do usuário autenticado.</p><p data-l="en">Returns the remaining cooldown for the authenticated user.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "cooldownRemainingMs": 12345,
   "lastClaimTimestamp": 1234567890,
   "cooldownMs": 86400000
-}</code></pre>
-            </div>
-
-            <!-- CARDS -->
-            <div class="endpoint-block">
-              <h3>POST /api/card</h3>
-              <p><strong>Description:</strong> Retrieves the card code of the authenticated user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre></div><h3><span data-l="pt">Cartões</span><span data-l="en">Cards</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/card</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Obtém o código do cartão do usuário autenticado.</p><p data-l="en">Retrieves the card code of the authenticated user.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "cardCode": "abc123..."
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/card/reset</h3>
-              <p><strong>Description:</strong> Generates a new card code for the user (invalidates the old one).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Sem cartão: <code>404 { error: "Card not found" }</code>.</p><p data-l="en">No card: <code>404 { error: "Card not found" }</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/card/reset</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Gera um novo código de cartão (invalida o anterior).</p><p data-l="en">Generates a new card code for the user (invalidates the old one).</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "newCode": "def456..."
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/card/info</h3>
-              <p><strong>Description:</strong> Get account information by card code (no authentication required).</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/card/info</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Informações da conta pelo código do cartão (sem autenticação).</p><p data-l="en">Get account information by card code (no authentication required).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "cardCode": "abcdef"
-}</code></pre>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "success": true,
   "userId": "123",
   "coins": "0.00012345",
@@ -311,62 +178,14 @@ Content-Type: application/json</code></pre>
   "lastClaimTs": 1234567890,
   "cooldownRemainingMs": 0,
   "cooldownMs": 86400000
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/card/claim</h3>
-              <p><strong>Description:</strong> Claims reward using a card code (no auth).</p>
-              <p><strong>Body:</strong> <code>{ "cardCode": "abcdef" }</code></p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Não encontrado: <code>404 { success: false, error: "Card not found" }</code>.</p><p data-l="en">Not found: <code>404 { success: false, error: "Card not found" }</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/card/claim</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Resgata a recompensa usando o código do cartão (sem autenticação).</p><p data-l="en">Claims reward using a card code (no auth).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "cardCode": "abcdef" }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "success": true,
   "claimed": 0.05
-}</code></pre>
-              <p>On cooldown: <code>429</code> with <code>error: "COOLDOWN_ACTIVE"</code>.</p>
-            </div>
-
-            <!-- BACKUPS -->
-            <div class="endpoint-block">
-              <h3>POST /api/backup/create</h3>
-              <p><strong>Description:</strong> Generates backup codes for the authenticated user. Up to 12 codes will be created if the user has a positive balance.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/backup/list</h3>
-              <p><strong>Description:</strong> Lists the backup codes for the authenticated user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Em cooldown: <code>429</code> com <code>error: "COOLDOWN_ACTIVE"</code> e <code>nextClaimInMs</code>. Cartão inexistente: <code>404 CARD_NOT_FOUND</code>.</p><p data-l="en">On cooldown: <code>429</code> with <code>error: "COOLDOWN_ACTIVE"</code> and <code>nextClaimInMs</code>. Unknown card: <code>404 CARD_NOT_FOUND</code>.</p></div><h3><span data-l="pt">Backups</span><span data-l="en">Backups</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/backup/create</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Gera códigos de backup para o usuário autenticado. Até 12 códigos são criados se o usuário tiver saldo positivo.</p><p data-l="en">Generates backup codes for the authenticated user. Up to 12 codes will be created if the user has a positive balance.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/backup/list</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Lista os códigos de backup do usuário autenticado.</p><p data-l="en">Lists the backup codes for the authenticated user.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "backups": ["code1", "code2"]
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/backup/restore</h3>
-              <p><strong>Description:</strong> Consumes a backup code and transfers the entire balance of the original owner to the authenticated user. Cannot restore your own backup.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong> <code>{ "backupId": "code" }</code></p>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <!-- INFO & RANK -->
-            <div class="endpoint-block">
-              <h3>GET /api/totalusers</h3>
-              <p><strong>Description:</strong> Returns the total number of registered users.</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/backup/restore</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Consome um código de backup e transfere todo o saldo do dono original para o usuário autenticado. Não é possível restaurar o próprio backup.</p><p data-l="en">Consumes a backup code and transfers the entire balance of the original owner to the authenticated user. Cannot restore your own backup.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "backupId": "code" }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><h3><span data-l="pt">Informações e ranking</span><span data-l="en">Info &amp; rank</span></h3><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/totalusers</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Retorna o total de usuários registrados.</p><p data-l="en">Returns the total number of registered users.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "totalUsers": 42
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>GET /api/tx/:txid</h3>
-              <p><strong>Description:</strong> Looks up a transaction by its ID. Returns detailed information including amounts in satoshis and coins.</p>
-              <p><strong>Response (found):</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/tx/:txid</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Consulta uma transação pelo ID. Retorna detalhes com valores em sats e em coins. É a fonte de dados da página pública de comprovante.</p><p data-l="en">Looks up a transaction by its ID. Returns detailed information including amounts in satoshis and coins. This is the data source of the public receipt page.</p><p data-l="pt"><strong>Resposta (encontrada):</strong></p><p data-l="en"><strong>Response (found):</strong></p><pre><code>{
   "success": true,
   "tx": {
     "id": "uuid-12345",
@@ -376,17 +195,7 @@ Content-Type: application/json</code></pre>
     "amountSats": 12345,
     "amountCoins": "0.00012345"
   }
-}</code></pre>
-              <p><strong>Response (not found):</strong> <code>404</code> with <code>{ error: "INVALID_TRANSACTION", message: "Transaction not found" }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>GET /api/transactions</h3>
-              <p><strong>Description:</strong> Lists transactions for the authenticated user with pagination (page parameter).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Query:</strong> <code>?page=1</code></p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt">Não encontrada: <code>404</code> com <code>{ error: "INVALID_TRANSACTION", message: "Transaction not found" }</code>.</p><p data-l="en">Not found: <code>404</code> with <code>{ error: "INVALID_TRANSACTION", message: "Transaction not found" }</code>.</p></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/transactions</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Lista as transações do usuário autenticado com paginação (parâmetro <code>page</code>). O site percorre as páginas até receber uma lista vazia para montar o extrato e o gráfico.</p><p data-l="en">Lists transactions for the authenticated user with pagination (<code>page</code> parameter). The website walks pages until it receives an empty list to build the statement and the chart.</p><p data-l="pt"><strong>Query:</strong></p><p data-l="en"><strong>Query:</strong></p><pre><code>?page=1</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "transactions": [
     {
       "id": "tx-1",
@@ -397,66 +206,22 @@ Content-Type: application/json</code></pre>
     }
   ],
   "page": 1
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>GET /api/user/:userId/balance</h3>
-              <p><strong>Description:</strong> Returns the balance of the authenticated user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/user/:userId/balance</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Retorna o saldo do usuário <strong>autenticado</strong> (o <code>:userId</code> da URL é ignorado; vale o da sessão).</p><p data-l="en">Returns the balance of the <strong>authenticated</strong> user (the <code>:userId</code> in the URL is ignored; the session user is used).</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "coins": 12.345678
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>GET /api/rank</h3>
-              <p><strong>Description:</strong> Returns the top 25 users by balance and the total coins in circulation.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/rank</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Retorna os 25 maiores saldos e o total de coins em circulação.</p><p data-l="en">Returns the top 25 users by balance and the total coins in circulation.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "totalCoins": 1234.56,
   "rankings": [
-    { "id": "111", "username": "alice", "coins": 100.5 },
-    ...
+    { "id": "111", "username": "alice", "coins": 100.5 }
   ]
-}</code></pre>
-            </div>
-
-            <!-- BILLS -->
-            <div class="endpoint-block">
-              <h3>POST /api/bill/create</h3>
-              <p><strong>Description:</strong> Creates a bill (invoice) from the authenticated user (or from a specified <code>fromId</code>) to a recipient. The bill expires after the given duration.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre></div><h3><span data-l="pt">Cobranças (bills)</span><span data-l="en">Bills</span></h3><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/create</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Cria uma cobrança de <code>fromId</code> (quem paga) para <code>toId</code> (quem recebe). A cobrança expira após a duração informada.</p><p data-l="en">Creates a bill (invoice) from <code>fromId</code> (payer) to a recipient <code>toId</code>. The bill expires after the given duration.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
+  "fromId": "payer_id",
   "toId": "recipient_id",
   "amount": 0.5,
-  "time": "1d"      // optional, defaults to now
-}</code></pre>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+  "time": "1d"
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "success": true,
   "billId": "bill-abc123"
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/bill/pay</h3>
-              <p><strong>Description:</strong> Pays a bill using the authenticated user's balance.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong> <code>{ "billId": "bill-abc123" }</code></p>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/bill/list</h3>
-              <p><strong>Description:</strong> Lists bills to pay (incoming) and bills to receive (outgoing) for the authenticated user.</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body (optional):</strong> <code>{ "page": 1 }</code></p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><code>time</code> é opcional. O site envia <code>fromId</code> = devedor e <code>toId</code> = o próprio usuário. Parâmetros inválidos: <code>400</code>.</p><p data-l="en"><code>time</code> is optional. The website sends <code>fromId</code> = debtor and <code>toId</code> = the current user. Invalid parameters: <code>400</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/pay</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Paga uma cobrança usando o saldo do usuário autenticado.</p><p data-l="en">Pays a bill using the authenticated user's balance.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "billId": "bill-abc123" }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre><p data-l="pt">Falha: <code>400 { error: "operation failed" }</code>.</p><p data-l="en">Failure: <code>400 { error: "operation failed" }</code>.</p></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/list</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Lista cobranças a pagar e a receber do usuário autenticado.</p><p data-l="en">Lists bills to pay (incoming) and bills to receive (outgoing) for the authenticated user.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "page": 1 }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "toPay": [
     { "id": "b1", "from_id": "111", "to_id": "222", "amount": "0.1", "date": "..." }
   ],
@@ -464,124 +229,101 @@ Content-Type: application/json</code></pre>
     { "id": "b2", "from_id": "333", "to_id": "222", "amount": "0.2", "date": "..." }
   ],
   "page": 1
-}</code></pre>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/bill/list/from</h3>
-              <p><strong>Description:</strong> Lists bills that the authenticated user must pay (incoming).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong> <code>{ "page": 1 }</code></p>
-              <p><strong>Response:</strong> <code>{ "toPay": [...], "page": 1 }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/bill/list/to</h3>
-              <p><strong>Description:</strong> Lists bills that the authenticated user will receive (outgoing).</p>
-              <p><strong>Auth:</strong> Bearer token</p>
-              <p><strong>Body:</strong> <code>{ "page": 1 }</code></p>
-              <p><strong>Response:</strong> <code>{ "toReceive": [...], "page": 1 }</code></p>
-            </div>
-
-            <!-- CARD BILLS -->
-            <div class="endpoint-block">
-              <h3>POST /api/bill/create/card</h3>
-              <p><strong>Description:</strong> Creates a bill using card codes (resolves owner IDs from the cards). At least one of <code>fromCard</code> or <code>toCard</code> must be provided.</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/list/from</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Lista as cobranças que o usuário autenticado deve pagar.</p><p data-l="en">Lists bills that the authenticated user must pay (incoming).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "page": 1 }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "toPay": [...], "page": 1 }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/list/to</code><span class="tag auth"><span data-l="pt">Bearer token</span><span data-l="en">Bearer token</span></span></div><p data-l="pt">Lista as cobranças que o usuário autenticado vai receber.</p><p data-l="en">Lists bills that the authenticated user will receive (outgoing).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{ "page": 1 }</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "toReceive": [...], "page": 1 }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/create/card</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Cria uma cobrança usando códigos de cartão (os donos são resolvidos pelos cartões). Pelo menos <code>fromCard</code> ou <code>toCard</code> deve ser informado.</p><p data-l="en">Creates a bill using card codes (resolves owner IDs from the cards). At least one of <code>fromCard</code> or <code>toCard</code> must be provided.</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "fromCard": "abcd-ef",
   "toCard": "wxyz-12",
   "amount": 0.5,
   "time": "1d"
-}</code></pre>
-              <p><strong>Response:</strong> <code>{ success: true, billId: "..." }</code></p>
-            </div>
-
-            <div class="endpoint-block">
-              <h3>POST /api/bill/pay/card</h3>
-              <p><strong>Description:</strong> Pays a bill using a card code (the payer is resolved from the card).</p>
-              <p><strong>Body:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true, "billId": "..." }</code></pre></div><div class="ep"><div class="ep-h"><span class="m post">POST</span><code>/api/bill/pay/card</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Paga uma cobrança usando um código de cartão (o pagador é resolvido pelo cartão).</p><p data-l="en">Pays a bill using a card code (the payer is resolved from the card).</p><p data-l="pt"><strong>Corpo:</strong></p><p data-l="en"><strong>Body:</strong></p><pre><code>{
   "cardCode": "abcd-ef",
   "billId": "bill-123"
-}</code></pre>
-              <p><strong>Response:</strong> <code>{ success: true }</code></p>
-            </div>
-
-            <!-- INTERNAL (optional) -->
-            <div class="endpoint-block">
-              <h3>GET /api/queue/info</h3>
-              <p><strong>Description:</strong> Returns queue statistics (only available if <code>EXPOSE_INTERNALS=true</code>).</p>
-              <p><strong>Response:</strong></p>
-              <pre><code>{
+}</code></pre><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "success": true }</code></pre></div><h3><span data-l="pt">Internos e saúde</span><span data-l="en">Internal &amp; health</span></h3><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/health</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Verificação de saúde do servidor. O site usa para o indicador de status e latência da API.</p><p data-l="en">Server health check. The website uses it for the API status and latency indicator.</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "ok": true, "uptime": 12345.67 }</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/queue/info</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Estatísticas da fila (somente se <code>EXPOSE_INTERNALS=true</code>).</p><p data-l="en">Returns queue statistics (only available if <code>EXPOSE_INTERNALS=true</code>).</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{
   "queued": 3,
   "usedBytes": 1234,
   "maxBytes": 524288,
   "maxOpsPerSecond": 500
-}</code></pre>
-            </div>
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/queue/status/:id</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span></div><p data-l="pt">Status de um item específico da fila (se exposto).</p><p data-l="en">Returns the status of a specific queue item (if exposed).</p><p data-l="pt"><strong>Resposta:</strong></p><p data-l="en"><strong>Response:</strong></p><pre><code>{ "state": "done", "ts": 1234567890, "result": {...} }</code></pre></div></section>
 
-            <div class="endpoint-block">
-              <h3>GET /api/queue/status/:id</h3>
-              <p><strong>Description:</strong> Returns the status of a specific queue item (if exposed).</p>
-              <p><strong>Response:</strong> <code>{ state: "done", ts: 1234567890, result: {...} }</code></p>
-            </div>
+<section id="site"><h2><span class="n">5</span><span data-l="pt">Páginas do site</span><span data-l="en">Website pages</span></h2><table><thead><tr><th><span data-l="pt">Rota</span><span data-l="en">Route</span></th><th><span data-l="pt">Arquivo</span><span data-l="en">File</span></th><th><span data-l="pt">Descrição</span><span data-l="en">Description</span></th></tr></thead><tbody><tr><td><code>/</code></td><td><code>site/index.html</code></td><td><span data-l="pt">Banco digital (login, cadastro, início, extrato, transferir, cartão, cobranças, recompensas, rede, conta). Rotas internas por hash: <code>#/home</code>, <code>#/history</code>, <code>#/transfer?to=ID&amp;amount=1</code>, <code>#/card</code>, <code>#/bills</code>, <code>#/claim</code>, <code>#/network</code>, <code>#/account</code>.</span><span data-l="en">Digital bank (sign-in, sign-up, home, statement, transfer, card, bills, rewards, network, account). Internal hash routes: <code>#/home</code>, <code>#/history</code>, <code>#/transfer?to=ID&amp;amount=1</code>, <code>#/card</code>, <code>#/bills</code>, <code>#/claim</code>, <code>#/network</code>, <code>#/account</code>.</span></td></tr><tr><td><code>/tx.html?id=&lt;txid&gt;</code></td><td><code>site/tx.html</code></td><td><span data-l="pt">Página pública do comprovante (estilo gateway), com QR code, download em PNG/PDF e botão para voltar ao site. Também aceita <code>/tx/&lt;txid&gt;</code> quando a rota abaixo estiver ativa.</span><span data-l="en">Public receipt page (gateway style) with QR code, PNG/PDF download and a back-to-site button. Also accepts <code>/tx/&lt;txid&gt;</code> once the route below is active.</span></td></tr><tr><td><code>/terms/</code></td><td><code>site/terms/terms.html</code></td><td><span data-l="pt">Termos de Uso</span><span data-l="en">Terms of Use</span></td></tr><tr><td><code>/terms/privacy.html</code></td><td><code>site/terms/privacy.html</code></td><td><span data-l="pt">Política de Privacidade</span><span data-l="en">Privacy Policy</span></td></tr><tr><td><code>/terms/documentation.html</code></td><td><code>site/terms/documentation.html</code></td><td><span data-l="pt">Esta documentação</span><span data-l="en">This documentation</span></td></tr><tr><td><code>/favicon.ico</code>, <code>/coin-icon.png</code>, <code>/coin-bank-embed.png</code></td><td><code>site/</code></td><td><span data-l="pt">Ícones e imagem de embed (Open Graph)</span><span data-l="en">Icons and embed image (Open Graph)</span></td></tr></tbody></table><p data-l="pt">Rota opcional para URLs curtas de comprovante (adicione em <code>api.js</code>, antes do <code>express.static</code>). Depois, no <code>index.html</code>, troque <code>CONFIG.TX_URL</code> para <code>/tx/${id}</code>:</p><p data-l="en">Optional route for short receipt URLs (add to <code>api.js</code>, before <code>express.static</code>). Then, in <code>index.html</code>, switch <code>CONFIG.TX_URL</code> to <code>/tx/${id}</code>:</p><pre><code>app.get('/tx/:txid', (req, res) =&gt; res.sendFile(path.join(SITE_DIR, 'tx.html')));</code></pre></section>
 
-          </section>
+<section id="planned"><h2><span class="n">6</span><span data-l="pt">Novos endpoints públicos (planejados)</span><span data-l="en">New public endpoints (planned)</span></h2><p data-l="pt">Estes endpoints <strong>ainda serão implementados</strong> no backend. O site já está pronto para eles: a aba <strong>Rede</strong> testa cada um e mostra <span class="tag soon">Em breve</span> enquanto respondem <code>404</code>; assim que passarem a responder <code>200</code> com os formatos abaixo, os dados aparecem automaticamente, sem alterar o front-end. Todos são públicos (sem autenticação) e devem devolver valores em coins como string com 8 casas.</p><p data-l="en">These endpoints <strong>will be implemented</strong> in the backend. The website is already prepared: the <strong>Network</strong> tab probes each one and shows <span class="tag soon">Soon</span> while they answer <code>404</code>; once they return <code>200</code> with the shapes below, data appears automatically with no front-end change. All are public (no auth) and should return coin amounts as strings with 8 decimals.</p><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/stats</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span><span class="tag soon"><span data-l="pt">Planejado</span><span data-l="en">Planned</span></span></div><p data-l="pt">Retrato público do sistema. Alimenta os indicadores da aba Rede.</p><p data-l="en">Public system snapshot. Feeds the Network tab KPIs.</p><p data-l="pt"><strong>Resposta esperada:</strong></p><p data-l="en"><strong>Expected response:</strong></p><pre><code>{
+  "totalUsers": 1283,
+  "newUsers24h": 9,
+  "totalCoins": "98213.12345678",
+  "totalTransactions": 48211,
+  "transactions24h": 312,
+  "volume24h": "1543.20000000",
+  "activeUsers24h": 88,
+  "totalCards": 1190,
+  "openBills": 14,
+  "serverTime": "2026-10-12T20:00:00.000Z"
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/stats/history?days=30</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span><span class="tag soon"><span data-l="pt">Planejado</span><span data-l="en">Planned</span></span></div><p data-l="pt">Série diária para o gráfico de atividade da rede (máx. sugerido: 365 dias).</p><p data-l="en">Daily series for the network activity chart (suggested max: 365 days).</p><p data-l="pt"><strong>Resposta esperada:</strong></p><p data-l="en"><strong>Expected response:</strong></p><pre><code>{
+  "days": [
+    { "date": "2026-10-11", "transactions": 340, "volume": "1622.50000000", "newUsers": 7 },
+    { "date": "2026-10-12", "transactions": 312, "volume": "1543.20000000", "newUsers": 9 }
+  ]
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/api/stats/recent?limit=10</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span><span class="tag soon"><span data-l="pt">Planejado</span><span data-l="en">Planned</span></span></div><p data-l="pt">Últimas transações públicas da rede (feed estilo exchange). Recomenda-se limitar a 50.</p><p data-l="en">Latest public network transactions (exchange-style feed). Recommended cap: 50.</p><p data-l="pt"><strong>Resposta esperada:</strong></p><p data-l="en"><strong>Expected response:</strong></p><pre><code>{
+  "transactions": [
+    { "id": "uuid", "date": "2026-10-12T19:59:01.000Z", "from": "111…", "to": "222…", "amountSats": 150000000 }
+  ]
+}</code></pre></div><div class="ep"><div class="ep-h"><span class="m get">GET</span><code>/tx/:txid</code><span class="tag pub"><span data-l="pt">Público</span><span data-l="en">Public</span></span><span class="tag soon"><span data-l="pt">Planejado</span><span data-l="en">Planned</span></span></div><p data-l="pt">Página do comprovante com URL curta (serve <code>site/tx.html</code>). Ver seção 5.</p><p data-l="en">Short-URL receipt page (serves <code>site/tx.html</code>). See section 5.</p></div><div class="notice"><span data-l="pt">Sugestão: cache de 30–60 s no servidor para <code>/api/stats*</code> (são consultados por todos os visitantes) e cabeçalho <code>Cache-Control: public, max-age=30</code>.</span><span data-l="en">Tip: cache <code>/api/stats*</code> for 30–60 s on the server (they are queried by every visitor) and send <code>Cache-Control: public, max-age=30</code>.</span></div></section>
 
-          <!-- txId -->
-          <section id="txid" class="section">
-            <h2>5) txId: generation &amp; when responses include it</h2>
-            <ul>
-              <li>Every enqueued payload receives a <code>payload.txId</code> (UUID) for idempotency; the server only sets it if the client didn't provide one.</li>
-              <li>Whether the HTTP response includes the <code>txId</code> depends on the route mapping:
-                <ul>
-                  <li><code>legacyReturn: 'transfer'</code> → response is always <code>{ success: true }</code> (txId hidden).</li>
-                  <li><code>legacyReturn: 'transfer_card'</code> → response is <code>{ success: true, txId?, date? }</code> if the worker result contains a txId; otherwise <code>{ success: true }</code>.</li>
-                  <li>Default (no legacyReturn) → returns the worker result as‑is, which may include <code>txId</code> if the underlying logic function returns it.</li>
-                </ul>
-              </li>
-              <li>To always receive the <code>txId</code>, provide it yourself in the request body or modify <code>doEnqueueAndMap</code> mapping.</li>
-            </ul>
-          </section>
+<section id="txid"><h2><span class="n">7</span><span data-l="pt">txId: geração e quando aparece nas respostas</span><span data-l="en">txId: generation &amp; when responses include it</span></h2><div data-l="pt"><ul><li>Todo payload enfileirado recebe um <code>payload.txId</code> (UUID) para idempotência; o servidor só define se o cliente não enviar um.</li><li>Se a resposta HTTP inclui o <code>txId</code> depende do mapeamento da rota:<ul><li><code>legacyReturn: 'transfer'</code> → sempre <code>{ success: true }</code> (txId oculto).</li><li><code>legacyReturn: 'transfer_card'</code> → <code>{ success: true, txId?, date? }</code> se o resultado tiver txId; senão <code>{ success: true }</code>.</li><li>Padrão → resultado do worker como está, que pode incluir <code>txId</code> se a função de lógica o retornar.</li></ul></li><li>Para sempre receber o <code>txId</code>, envie-o no corpo da requisição ou altere o mapeamento em <code>doEnqueueAndMap</code>.</li><li>Com o txId, o comprovante público fica em <code>/tx.html?id=&lt;txId&gt;</code>.</li></ul></div><div data-l="en"><ul><li>Every enqueued payload receives a <code>payload.txId</code> (UUID) for idempotency; the server only sets it if the client didn't provide one.</li><li>Whether the HTTP response includes the <code>txId</code> depends on the route mapping:<ul><li><code>legacyReturn: 'transfer'</code> → response is always <code>{ success: true }</code> (txId hidden).</li><li><code>legacyReturn: 'transfer_card'</code> → response is <code>{ success: true, txId?, date? }</code> if the worker result contains a txId; otherwise <code>{ success: true }</code>.</li><li>Default (no legacyReturn) → returns the worker result as-is, which may include <code>txId</code> if the underlying logic function returns it.</li></ul></li><li>To always receive the <code>txId</code>, provide it yourself in the request body or modify <code>doEnqueueAndMap</code> mapping.</li><li>With the txId, the public receipt lives at <code>/tx.html?id=&lt;txId&gt;</code>.</li></ul></div></section>
 
-          <!-- Errors -->
-          <section id="errors" class="section">
-            <h2>6) Errors &amp; status codes</h2>
-            <ul>
-              <li><strong>400</strong> – invalid parameters: <code>{ error: 'Invalid parameters' }</code></li>
-              <li><strong>403</strong> – authentication failure: <code>{ error: 'operation failed' }</code></li>
-              <li><strong>404</strong> – resource not found (e.g. card, transaction)</li>
-              <li><strong>409</strong> – conflict (username already taken)</li>
-              <li><strong>429</strong> – rate limit exceeded, queue full, or IP locked: <code>{ error: "QUEUE_FULL" }</code> or <code>{ error: "RATE_LIMIT_EXCEEDED" }</code></li>
-              <li><strong>504</strong> – queue wait timeout: <code>{ error: 'QUEUE_TIMEOUT' }</code></li>
-              <li><strong>500</strong> – internal server error: <code>{ error: 'Internal error' }</code></li>
-            </ul>
-          </section>
+<section id="errors"><h2><span class="n">8</span><span data-l="pt">Erros e códigos de status</span><span data-l="en">Errors &amp; status codes</span></h2><table><thead><tr><th>Status</th><th><span data-l="pt">Significado</span><span data-l="en">Meaning</span></th><th><span data-l="pt">Corpo típico</span><span data-l="en">Typical body</span></th></tr></thead><tbody><tr><td><strong>400</strong></td><td><span data-l="pt">Parâmetros inválidos</span><span data-l="en">Invalid parameters</span></td><td><code>{ error: "Invalid parameters" }</code></td></tr><tr><td><strong>402</strong></td><td><span data-l="pt">Saldo insuficiente (rotas de cartão)</span><span data-l="en">Insufficient funds (card routes)</span></td><td><code>{ success: false, error: "INSUFFICIENT_FUNDS" }</code></td></tr><tr><td><strong>403</strong></td><td><span data-l="pt">Falha de autenticação / sessão inválida</span><span data-l="en">Authentication failure / invalid session</span></td><td><code>{ error: "operation failed" }</code></td></tr><tr><td><strong>404</strong></td><td><span data-l="pt">Recurso não encontrado (cartão, transação)</span><span data-l="en">Resource not found (card, transaction)</span></td><td><code>{ error: "INVALID_TRANSACTION" }</code></td></tr><tr><td><strong>409</strong></td><td><span data-l="pt">Conflito (usuário já existe)</span><span data-l="en">Conflict (username already taken)</span></td><td><code>{ success: false, error: "Username already taken" }</code></td></tr><tr><td><strong>429</strong></td><td><span data-l="pt">Limite excedido, fila cheia, IP bloqueado ou cooldown</span><span data-l="en">Rate limit exceeded, queue full, IP locked or cooldown</span></td><td><code>{ error: "QUEUE_FULL" }</code> · <code>{ error: "RATE_LIMIT_EXCEEDED" }</code></td></tr><tr><td><strong>500</strong></td><td><span data-l="pt">Erro interno</span><span data-l="en">Internal server error</span></td><td><code>{ error: "Internal error" }</code></td></tr><tr><td><strong>504</strong></td><td><span data-l="pt">Tempo de espera da fila esgotado</span><span data-l="en">Queue wait timeout</span></td><td><code>{ error: "QUEUE_TIMEOUT" }</code></td></tr></tbody></table></section>
 
-          <!-- Appendix -->
-          <section id="appendix" class="section">
-            <h2>7) Appendix — op names</h2>
-            <pre><code>login, register, logout, account_change, account_unregister, account_update,
+<section id="appendix"><h2><span class="n">9</span><span data-l="pt">Apêndice — nomes das operações</span><span data-l="en">Appendix — op names</span></h2><pre><code>login, register, logout, account_change, account_unregister, account_update,
 transfer, transfer_card, claim, claim_status, get_card, reset_card,
 backup_create, backup_list, backup_restore,
 get_balance, rank, total_users, tx_lookup, transactions,
 bill_list, bill_list_from, bill_list_to, bill_create, bill_pay,
 card_info, card_claim, transfer_between_cards,
-bill_create_card, bill_pay_card</code></pre>
-            <p class="muted">Developer note: to change whether a route returns <code>txId</code>, edit <code>doEnqueueAndMap</code> mapping in <code>api.js</code>. You can also supply your own <code>txId</code> in the request to maintain idempotency and correlate with <code>/api/tx/:txid</code>.</p>
-          </section>
+bill_create_card, bill_pay_card</code></pre><p data-l="pt">Nota para desenvolvedores: para mudar se uma rota devolve <code>txId</code>, edite o mapeamento de <code>doEnqueueAndMap</code> em <code>api.js</code>. Você também pode enviar seu próprio <code>txId</code> para manter a idempotência e correlacionar com <code>/api/tx/:txid</code>.</p><p data-l="en">Developer note: to change whether a route returns <code>txId</code>, edit <code>doEnqueueAndMap</code> mapping in <code>api.js</code>. You can also supply your own <code>txId</code> in the request to maintain idempotency and correlate with <code>/api/tx/:txid</code>.</p></section>
 
-          <div class="footer">
-            <div class="muted">Documentation generated to match the behavior in <code>api.js</code> and <code>logic.js</code>.</div>
-            <div class="muted">Last updated: <span id="lastUpdated">2025-02-26 14:30 UTC</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    document.getElementById('lastUpdated').textContent = new Date().toISOString().replace('T', ' ').slice(0,16) + ' UTC';
-  </script>
+<section id="example"><h2><span class="n">10</span><span data-l="pt">Exemplo rápido</span><span data-l="en">Quick example</span></h2><pre><code># 1) login
+curl -s -X POST https://bank.foxsrv.net/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"secret"}'
+
+# 2) balance (use the sessionId from step 1)
+curl -s https://bank.foxsrv.net/api/user/me/balance \
+  -H "Authorization: Bearer &lt;sessionId&gt;"
+
+# 3) transfer
+curl -s -X POST https://bank.foxsrv.net/api/transfer \
+  -H "Authorization: Bearer &lt;sessionId&gt;" -H "Content-Type: application/json" \
+  -d '{"toId":"987654321","amount":0.5}'
+
+# 4) public receipt
+curl -s https://bank.foxsrv.net/api/tx/&lt;txid&gt;</code></pre></section>
+
+    <div class="foot"><span>© Coin System · Fox Oficial</span><span><span data-l="pt">Última atualização</span><span data-l="en">Last updated</span>: <strong>2026-10-12</strong></span></div>
+  </article>
+</div>
+<div class="pfoot"><a href="/">Coin Bank</a><a href="/terms/">Terms</a><a href="/terms/privacy.html">Privacy</a><a href="/terms/documentation.html">API</a><a href="https://discord.com/oauth2/authorize?client_id=1391067775077978214" target="_blank" rel="noopener">Discord Bot</a></div>
+<button class="totop" id="totop" aria-label="Top">↑</button>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const ck = (n) => { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; };
+  const setCk = (n, v) => { document.cookie = `${n}=${encodeURIComponent(v)}; Max-Age=31536000; Path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`; };
+  let lang = ck('coin_lang') || ((navigator.language || '').toLowerCase().startsWith('pt') ? 'pt' : 'en');
+  const titles = { pt: 'Coin — Documentação da API', en: 'Coin — API Docs (complete)' };
+  function toc() {
+    const box = $('#toc'); box.innerHTML = '';
+    document.querySelectorAll('#doc section[id]').forEach((s) => { const h = s.querySelector('h2'); if (!h) return; const n = h.querySelector('.n'), l = h.querySelector('[data-l="' + lang + '"]'); const a = document.createElement('a'); a.href = '#' + s.id; a.textContent = ((n ? n.textContent + '. ' : '') + (l ? l.textContent : h.textContent)).replace(/\s+/g, ' ').trim(); a.dataset.id = s.id; box.appendChild(a); });
+  }
+  function apply() { document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en'; $('#langBtn').textContent = lang.toUpperCase(); document.title = titles[lang] || titles.en; toc(); }
+  const theme = () => { $('#themeBtn').textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀' : '☾'; };
+  $('#langBtn').addEventListener('click', () => { lang = lang === 'pt' ? 'en' : 'pt'; setCk('coin_lang', lang); apply(); });
+  $('#themeBtn').addEventListener('click', () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); setCk('coin_theme', n); theme(); });
+  document.querySelectorAll('pre').forEach((p) => { const b = document.createElement('button'); b.className = 'cpy'; b.type = 'button'; b.textContent = lang === 'pt' ? 'Copiar' : 'Copy'; b.addEventListener('click', async () => { const s = p.querySelector('code') ? p.querySelector('code').innerText : p.innerText; try { await navigator.clipboard.writeText(s); } catch {} const t = document.createElement('div'); t.className = 'toast'; t.textContent = lang === 'pt' ? 'Copiado!' : 'Copied!'; document.body.appendChild(t); setTimeout(() => t.remove(), 1600); }); p.appendChild(b); });
+  const io = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) document.querySelectorAll('#toc a').forEach((a) => a.classList.toggle('on', a.dataset.id === e.target.id)); }); }, { rootMargin: '-80px 0px -70% 0px' });
+  document.querySelectorAll('#doc section[id]').forEach((s) => io.observe(s));
+  addEventListener('scroll', () => $('#totop').classList.toggle('on', scrollY > 600), { passive: true });
+  $('#totop').addEventListener('click', () => scrollTo({ top: 0 }));
+  apply(); theme();
+})();
+</script>
 </body>
 </html>

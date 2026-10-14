@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pagamento · Coin Bank</title>
+<meta name="description" content="Pague com Coin Bank escaneando o QR code. / Pay with Coin Bank by scanning the QR code.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Coin Bank · Pagamento por QR">
+<meta property="og:image" content="/coin-bank-embed.png">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" href="/coin-icon.png">
+<meta name="color-scheme" content="light dark">
+<script>(function(){try{var c=document.cookie,m=c.match(/(?:^|; )coin_theme=([^;]*)/),t=m?decodeURIComponent(m[1]):'auto';if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);var l=c.match(/(?:^|; )coin_lang=([^;]*)/),g=l?l[1]:((navigator.language||'').toLowerCase().indexOf('pt')===0?'pt':'en');document.documentElement.lang=g==='pt'?'pt-BR':'en';}catch(e){}})();</script>
+<style>
+:root{--bg:#eceef1;--card:#fff;--card2:#f4f5f7;--fg:#14161a;--fg2:#5b616b;--fg3:#8b919b;--line:#dfe2e7;--pri:#23272d;--prifg:#fff;--ok:#0ecb81;--okd:#0f8a5b;--bad:#d0353b;--gold:#a9802a;--shadow:0 10px 40px rgba(0,0,0,.08);--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+:root[data-theme="dark"]{--bg:#101113;--card:#191b1e;--card2:#212328;--fg:#e8eaed;--fg2:#a1a7b0;--fg3:#717883;--line:#2a2d33;--pri:#e4e6e9;--prifg:#111214;--okd:#2fbf80;--bad:#f05a60;--gold:#d6a94b;--shadow:0 10px 40px rgba(0,0,0,.45)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+button,input,a{font:inherit}
+.bar{width:100%;max-width:520px;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--fg);font-weight:800;margin-right:auto}
+.brand img{width:30px;height:30px}
+.ib{height:36px;min-width:36px;padding:0 10px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-weight:750;font-size:12.5px;cursor:pointer}
+.box{width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;animation:fi .3s ease both}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hd{padding:24px 24px 6px;text-align:center}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--fg3)}
+.amt{font-size:40px;font-weight:850;letter-spacing:-1px;margin:6px 0 2px}
+.amt small{font-size:14px;color:var(--gold);margin-left:6px;letter-spacing:.8px}
+.to{color:var(--fg2)}
+.memo{margin:10px 24px 0;padding:10px 12px;border-radius:12px;background:var(--card2);color:var(--fg2);font-size:14px;text-align:center}
+.qr{display:flex;justify-content:center;padding:18px 24px 6px}
+.qr img{width:min(300px,78vw);height:auto;border-radius:16px;border:1px solid var(--line);background:#fff}
+.pill{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800;border:1px solid var(--line);color:var(--fg2)}
+.pill.ok{color:var(--okd);border-color:var(--okd)}.pill.bad{color:var(--bad);border-color:var(--bad)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.body{padding:16px 24px 24px}
+label{display:block;font-size:12px;font-weight:700;color:var(--fg3);text-transform:uppercase;letter-spacing:.5px;margin:6px 0}
+input{width:100%;border:1px solid var(--line);background:var(--card2);color:var(--fg);border-radius:12px;padding:13px 14px;font-size:17px;outline:none}
+input:focus{border-color:var(--gold)}
+.btn{width:100%;display:flex;justify-content:center;align-items:center;gap:8px;padding:14px;border-radius:13px;border:1px solid transparent;font-weight:800;font-size:16px;cursor:pointer;text-decoration:none;margin-top:12px}
+.btn.pri{background:var(--ok);color:#fff}.btn.dark{background:var(--pri);color:var(--prifg)}.btn.sec{background:var(--card2);color:var(--fg);border-color:var(--line)}.btn.bad{background:transparent;color:var(--bad);border-color:var(--bad)}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin-top:8px;text-align:center}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px;color:var(--fg2);margin-top:14px}
+.meta b{color:var(--fg);font-weight:650;word-break:break-all;text-align:right}
+.mono{font-family:var(--mono);font-size:12.5px}
+.done{text-align:center;padding:30px 24px}
+.done .ic{width:68px;height:68px;border-radius:50%;background:rgba(14,203,129,.14);color:var(--okd);display:inline-flex;align-items:center;justify-content:center;font-size:34px;font-weight:900}
+.links{margin-top:16px;font-size:12.5px;color:var(--fg3);text-align:center}.links a{color:var(--fg2);margin:0 8px;text-decoration:none}
+.sk{display:block;height:18px;border-radius:6px;background:var(--card2);margin:10px auto;width:60%}
+</style>
+</head>
+<body>
+<div class="bar"><a class="brand" href="/"><img src="/coin-icon.png" alt=""><span>Coin Bank</span></a><button class="ib" id="lb" type="button">EN</button><button class="ib" id="tb" type="button">◐</button></div>
+<main class="box" id="box"><div class="hd"><span class="sk"></span><span class="sk" style="width:40%;height:40px"></span><span class="sk"></span></div></main>
+<div class="links"><a href="/terms/">Terms</a><a href="/terms/privacy.html">Privacy</a><a href="/terms/documentation.html#s3">API</a></div>
+<script>
+(() => {
+  'use strict';
+  const T = {
+    pt: { req: 'Pedido de pagamento', send: 'Enviar coins', to: 'Para', any: 'Valor livre', amount: 'Valor a pagar', pay: 'Pagar agora', login: 'Entrar para pagar', loginHint: 'Entre na sua conta Coin Bank neste navegador e volte para este link.', paid: 'Pagamento concluído!', receipt: 'Ver comprovante', back: 'Voltar ao site', status: 'Status', expires: 'Expira', created: 'Criado', id: 'ID', open: 'Aberto', paidS: 'Pago', cancelled: 'Cancelado', expired: 'Expirado', yours: 'Este pedido é seu. Mostre o QR para quem vai pagar — a página atualiza sozinha.', cancel: 'Cancelar pedido', cancelled_ok: 'Pedido cancelado.', received: 'Pagamento recebido!', count: 'Pagamentos', total: 'Total recebido', nf: 'Pedido não encontrado', nfp: 'Confira o link ou peça um novo QR.', app: 'Abrir no app', confirm: 'Confirmar pagamento de', reusable: 'QR reutilizável', e: { INSUFFICIENT_FUNDS: 'Saldo insuficiente.', TRANSFER_COOLDOWN: 'Aguarde um segundo e tente de novo.', AMOUNT_REQUIRED: 'Informe o valor.', INVALID_AMOUNT: 'Valor inválido (até 8 casas decimais).', SELF_TRANSFER: 'Você não pode pagar a si mesmo.', PAYREQ_PAID: 'Este pedido já foi pago.', PAYREQ_EXPIRED: 'Este pedido expirou.', PAYREQ_CANCELLED: 'Este pedido foi cancelado.', 'operation failed': 'Sessão expirada — entre novamente.', RATE_LIMIT_EXCEEDED: 'Muitas tentativas, aguarde.', NETWORK: 'Sem conexão com a API.' } },
+    en: { req: 'Payment request', send: 'Send coins', to: 'To', any: 'Any amount', amount: 'Amount to pay', pay: 'Pay now', login: 'Sign in to pay', loginHint: 'Sign in to your Coin Bank account in this browser and come back to this link.', paid: 'Payment complete!', receipt: 'View receipt', back: 'Back to site', status: 'Status', expires: 'Expires', created: 'Created', id: 'ID', open: 'Open', paidS: 'Paid', cancelled: 'Cancelled', expired: 'Expired', yours: 'This request is yours. Show the QR to the payer — this page updates by itself.', cancel: 'Cancel request', cancelled_ok: 'Request cancelled.', received: 'Payment received!', count: 'Payments', total: 'Total received', nf: 'Request not found', nfp: 'Check the link or ask for a new QR.', app: 'Open in app', confirm: 'Confirm payment of', reusable: 'Reusable QR', e: { INSUFFICIENT_FUNDS: 'Insufficient balance.', TRANSFER_COOLDOWN: 'Wait a second and try again.', AMOUNT_REQUIRED: 'Enter the amount.', INVALID_AMOUNT: 'Invalid amount (up to 8 decimals).', SELF_TRANSFER: 'You cannot pay yourself.', PAYREQ_PAID: 'This request was already paid.', PAYREQ_EXPIRED: 'This request has expired.', PAYREQ_CANCELLED: 'This request was cancelled.', 'operation failed': 'Session expired — sign in again.', RATE_LIMIT_EXCEEDED: 'Too many attempts, wait a moment.', NETWORK: 'Cannot reach the API.' } }
+  };
+  const ck = (n) => { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; };
+  const setCk = (n, v) => { document.cookie = `${n}=${encodeURIComponent(v)}; Max-Age=31536000; Path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`; };
+  let lang = document.documentElement.lang === 'pt-BR' ? 'pt' : 'en';
+  const t = (k) => T[lang][k]; const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtDate = (v) => { const d = new Date(v); return isNaN(d) ? '—' : d.toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); };
+  const fmtAmt = (s) => (lang === 'pt' ? String(s).replace('.', ',') : String(s));
+  let session = null;
+  try { const s = JSON.parse(localStorage.getItem('session') || 'null'); if (s && s.sessionId) session = s; } catch {}
+  if (!session && ck('coin_sid')) session = { sessionId: ck('coin_sid'), userId: ck('coin_uid') };
+  const pm = location.pathname.match(/^\/pay\/(u\/)?([^/?#]+)/);
+  const isUser = !!(pm && pm[1]); const id = pm ? decodeURIComponent(pm[2]) : '';
+  const qAmount = new URLSearchParams(location.search).get('amount') || '';
+  let data = null, state = 'loading', result = null, errMsg = '', busy = false;
+
+  async function api(path, opt = {}) {
+    const h = { Accept: 'application/json' };
+    if (opt.body) h['Content-Type'] = 'application/json';
+    if (opt.auth && session) h.Authorization = 'Bearer ' + session.sessionId;
+    if (opt.idem) h['Idempotency-Key'] = opt.idem;
+    let r; try { r = await fetch(path, { method: opt.method || 'GET', headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined, cache: 'no-store' }); } catch { throw { code: 'NETWORK' }; }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || j.success === false) throw { code: j.error || 'HTTP_' + r.status, status: r.status, data: j };
+    return j;
+  }
+  const errText = (e) => (T[lang].e[e && e.code] || (e && e.data && e.data.message) || (e && e.code) || 'Error');
+  const statusPill = (s) => { const cls = s === 'open' ? 'ok' : s === 'paid' ? 'ok' : 'bad'; const lbl = { open: t('open'), paid: t('paidS'), cancelled: t('cancelled'), expired: t('expired') }[s] || s; return `<span class="pill ${cls}"><i class="dot"></i>${esc(lbl)}</span>`; };
+
+  function paint() {
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en'; $('#lb').textContent = lang === 'pt' ? 'EN' : 'PT';
+    $('#tb').textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀' : '☾';
+    const box = $('#box');
+    if (state === 'loading') return;
+    if (state === 'nf') { box.innerHTML = `<div class="done"><div class="ic" style="background:rgba(208,53,59,.12);color:var(--bad)">?</div><h2>${esc(t('nf'))}</h2><p class="to">${esc(t('nfp'))}</p><a class="btn sec" href="/">${esc(t('back'))}</a></div>`; return; }
+    if (state === 'done') {
+      box.innerHTML = `<div class="done"><div class="ic">✓</div><h2 style="margin:14px 0 4px">${esc(t('paid'))}</h2><div class="amt">${esc(fmtAmt(result.amount))}<small>COINS</small></div><div class="meta"><span>${esc(t('to'))}</span><b class="mono">${esc(result.to)}</b><span>TX</span><b class="mono">${esc(result.txId)}</b></div>
+        <a class="btn pri" href="/tx/${encodeURIComponent(result.txId)}">${esc(t('receipt'))}</a><a class="btn sec" href="/">${esc(t('back'))}</a></div>`;
+      document.title = t('paid') + ' · Coin Bank'; return;
+    }
+    const r = data;
+    const mine = !isUser && session && session.userId && String(session.userId) === String(r.to);
+    const amountFixed = isUser ? (r.amount || null) : r.amount;
+    const who = r.toName || r.to || r.userId;
+    const qrSrc = isUser ? `/api/qr/user/${encodeURIComponent(r.userId)}.svg?lang=${lang}${r.amount ? '&amount=' + encodeURIComponent(r.amount) : ''}` : `/api/pay/request/${encodeURIComponent(r.id)}/qr.svg?lang=${lang}&s=${r.status}${r.paidCount}`;
+    const open = isUser || r.status === 'open';
+    let action = '';
+    if (mine) {
+      action = `<p class="to" style="text-align:center">${esc(t('yours'))}</p>${r.reusable || r.paidCount ? `<div class="meta"><span>${esc(t('count'))}</span><b>${r.paidCount}</b><span>${esc(t('total'))}</span><b>${esc(fmtAmt(r.paidTotal))} coins</b></div>` : ''}${r.status === 'open' ? `<button class="btn bad" id="cancel">${esc(t('cancel'))}</button>` : ''}`;
+    } else if (open) {
+      action = session
+        ? `${amountFixed ? '' : `<label for="am">${esc(t('amount'))}</label><input id="am" inputmode="decimal" placeholder="0.00000001" value="${esc(qAmount)}" autocomplete="off">`}<button class="btn pri" id="pay">${esc(t('pay'))}</button><div class="err" id="err">${esc(errMsg)}</div>`
+        : `<p class="to" style="text-align:center">${esc(t('loginHint'))}</p><a class="btn dark" href="/">${esc(t('login'))}</a>`;
+      action += `<a class="btn sec" href="${esc(isUser ? r.uri : r.uri)}">${esc(t('app'))}</a>`;
+    }
+    box.innerHTML = `<div class="hd"><div class="kicker">${esc(isUser ? t('send') : t('req'))}${!isUser && r.reusable ? ' · ' + esc(t('reusable')) : ''}</div>
+      <div class="amt">${amountFixed ? esc(fmtAmt(amountFixed)) + '<small>COINS</small>' : esc(t('any'))}</div>
+      <div class="to">${esc(t('to'))} <b>${esc(who)}</b>${!isUser ? ' ' + statusPill(r.status) : ''}</div></div>
+      ${!isUser && r.memo ? `<div class="memo">${esc(r.memo)}</div>` : ''}
+      ${open ? `<div class="qr"><img src="${qrSrc}" alt="QR"></div>` : ''}
+      <div class="body">${action}
+        <div class="meta">${isUser ? `<span>${esc(t('id'))}</span><b class="mono">${esc(r.userId)}</b>` : `<span>${esc(t('id'))}</span><b class="mono">${esc(r.id)}</b><span>${esc(t('created'))}</span><b>${esc(fmtDate(r.createdAt))}</b><span>${esc(t('expires'))}</span><b>${esc(fmtDate(r.expiresAt))}</b>`}</div></div>`;
+    document.title = `${isUser ? t('send') : t('req')} · Coin Bank`;
+    const pay = $('#pay'); if (pay) pay.onclick = doPay;
+    const c = $('#cancel'); if (c) c.onclick = doCancel;
+    const am = $('#am'); if (am) am.addEventListener('keydown', (e) => { if (e.key === 'Enter') doPay(); });
+  }
+
+  async function doPay() {
+    if (busy) return;
+    const am = $('#am'); const amount = am ? am.value.trim().replace(',', '.') : undefined;
+    if (am && !/^\d+(\.\d{1,8})?$/.test(amount)) { errMsg = T[lang].e.INVALID_AMOUNT; paint(); return; }
+    const shown = data.amount || amount;
+    if (!confirm(`${t('confirm')} ${fmtAmt(shown)} coins → ${data.toName || data.to || data.userId}?`)) return;
+    busy = true; $('#pay').disabled = true; errMsg = '';
+    const key = 'web-' + (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2));
+    try {
+      result = isUser
+        ? await api('/api/transfer', { method: 'POST', auth: true, idem: key, body: { toId: data.userId, amount: data.amount || amount } })
+        : await api(`/api/pay/request/${encodeURIComponent(id)}/pay`, { method: 'POST', auth: true, idem: key, body: data.amount ? {} : { amount } });
+      if (!result.to) result.to = data.userId || data.to;
+      if (!result.amount) result.amount = data.amount || amount;
+      state = 'done';
+    } catch (e) { errMsg = errText(e); }
+    busy = false; paint();
+  }
+  async function doCancel() {
+    try { const j = await api(`/api/pay/request/${encodeURIComponent(id)}/cancel`, { method: 'POST', auth: true }); data = j.request; paint(); } catch (e) { alert(errText(e)); }
+  }
+  // owner view: live updates through long-polling
+  async function watch() {
+    while (data && !isUser && data.status === 'open') {
+      try { const j = await api(`/api/pay/request/${encodeURIComponent(id)}?wait=25&since=${data.paidCount}`); const before = data.paidCount; data = j.request; if (data.paidCount > before) { try { navigator.vibrate && navigator.vibrate(200); } catch {} } paint(); }
+      catch { await new Promise((r) => setTimeout(r, 5000)); }
+    }
+  }
+  async function load() {
+    if (!id) { state = 'nf'; paint(); return; }
+    try {
+      data = isUser ? await api(`/api/pay/user/${encodeURIComponent(id)}${qAmount ? '?amount=' + encodeURIComponent(qAmount) : ''}`) : (await api(`/api/pay/request/${encodeURIComponent(id)}`)).request;
+      state = 'ok';
+    } catch { state = 'nf'; }
+    paint();
+    if (state === 'ok' && !isUser && session && String(session.userId) === String(data.to)) watch();
+  }
+  $('#lb').onclick = () => { lang = lang === 'pt' ? 'en' : 'pt'; setCk('coin_lang', lang); paint(); };
+  $('#tb').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); setCk('coin_theme', n); paint(); };
+  load();
+})();
+</script>
+</body>
+</html>

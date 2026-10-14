@@ -1,246 +1,118 @@
-<h1 align="center">
+<h1 align="center">🏦 Coin Bank 2.0</h1>
+<p align="center"><img src="assets/logo.png" height="180"></p>
 
-<img src="logo.png" height="300">
+<p align="center">
+Bitcoin-like digital coin <b>with no real-world value</b> · public REST API · website · own payment cards · bilingual (EN/PT) Discord bot<br>
+Moeda digital estilo Bitcoin <b>sem valor real</b> · API REST pública · site · cartões próprios · bot do Discord bilíngue (EN/PT)
+</p>
 
-  [Coin](https://discord.com/oauth2/authorize?client_id=1391067775077978214) - Best Economy System!
-</h1>
-  <br><br>
+---
 
---------
+## 🇧🇷 Português
 
-# :memo: Requirements
+### O que tem
+| Módulo | Função |
+|---|---|
+| `index.js` | Entrada principal. Funciona com `node index.js`, `require('./index.js')` e `import bank from './index.js'` / `index.mjs`. |
+| `database.js` | **Único** módulo que acessa o disco (SQLite). Fila de escrita assíncrona com *group commit*, caches LRU, migração automática do banco antigo, limpeza periódica, backups, auditoria do livro-razão. |
+| `logic.js` | Toda a lógica: contas, sessões 24h, transferências, resgates, cobranças, cartões, backups, estatísticas, **fila de DMs**, **gráficos** e **comprovantes PNG/PDF**. |
+| `api.js` | Servidor HTTP (node:http puro) com todos os endpoints antigos + os que o site novo precisava, fila justa, rate limit, compressão, Cloudflare. |
+| `bot.js` | Bot do Discord: comandos **somente globais** (servidores + DM), respostas imediatas ("pensando…"), comandos por menção, embeds com o avatar do bot. |
+| `commands/` | 27 comandos, todos com nome/descrição em inglês e português. |
+| `lib/` | config.yml, dinheiro em inteiros, cache, QR code, otimizador de memória, túneis Cloudflare, textos. |
+| `site/` | Site (index.html), comprovante público (`/tx/:id`), termos, privacidade e documentação da API. |
 
-  - [Node.JS](https://nodejs.org/en/download/)
-  - [Git(Optional)](https://git-scm.com/downloads)
-  - [CloudFlare(Optional)](https://github.com/cloudflare/cloudflared/releases)
-
-# :computer: Install instructions
-
-  1. Clone this repository
-   ```
-   git clone https://github.com/FoxUshiha/DC-Coin-Bot
-   cd DC-coin-bot
-   ```
-  
-  2. Install dependecies
-  ```
-  npm install
-  npm install discord.js sqlite3 p-queue uuid node-fetch fs-extra yaml dotenv qrcode express better-sqlite3 fs-extra chartjs-node-canvas
-  ```
-
-  3. Create a application
-       - Go to https://discord.com/developers/applications/
-       - Create an application
-       - In the OAuth2 section copy your client id
-       - Still in the OAuth2 section, mark the `bot` check and scroll down to Bot Permissions and check `Send Messages` and scroll down again to get its link
-       - In the bot section click on `RESET TOKEN` and copy it
-
-  4. Paste the token
-       - Go to the .env file and paste your token and ID like this
-        ```
-          DISCORD_TOKEN=YOUR_BOT_TOKEN
-          CLIENT_ID=YOUR_CLIENT_ID
-        ```
-
-       - Go to the api.js and change the port number in:
-         ```
-           const port = process.env.API_PORT || 26450;  <<< // Change the port here
-             app.listen(port, () => {
-               console.log(`API REST rodando na porta ${port}`);
-            });
-           }
-         ```
-
-  5. Start the bot
-      ```
-        npm start
-      ```
-      or
-      ```
-        node index.js
-      ```
-
-      Defaults:
-      ```
-      API Port: 26450
-      Discord bot: https://discord.com/oauth2/authorize?client_id=1391067775077978214
-      API Online: http://coin.foxsrv.net:26450/
-      ```
-
-- How to setup the cloudflare tunnel (you will need to enable this in .env and buy a domain in cloudflare);
-
-Please put the Cloudflare binary file in the cloudflared folder of the project!
-Download here: https://github.com/cloudflare/cloudflared/releases
-
-If you are using linux:
-
-Go to the cloudflared folder and execute:
+### Instalação
+```bash
+npm install            # instala discord.js, yaml, better-sqlite3 e sharp
+# edite config.yml (token, client_id, owners...)
+npm start              # ou: node index.js  |  start.bat (Windows)  |  ./start.sh (Linux)
 ```
-bash
+* **Node 20+** (Node 22.13+ recomendado). Se o `better-sqlite3` não instalar, o sistema usa automaticamente o SQLite embutido do Node 22 (`node:sqlite`).
+* `sharp` gera os PNG/PDF de comprovantes e gráficos. Sem ele tudo funciona, só sem imagens.
+* **Não usa mais `.env`.** Na primeira execução o `config.yml` é criado e, se existir um `.env` antigo, os valores (token, client id, admin, AMOUNT, WAIT, porta, Cloudflare) são importados.
+* O banco antigo (`playerList/database.db`) é migrado sozinho: saldos, cartões, cobranças e backups são mantidos; senhas antigas (sha256) viram *scrypt* no próximo login; as sessões antigas expiram (é preciso logar de novo).
 
-cloudflared tunnel login
+### Discord
+* No Developer Portal: escopos `bot` + `applications.commands`. Nenhuma intent privilegiada é necessária (comandos por menção funcionam sem *Message Content*). Ative "Server Members" só se usar `welcome_new_members`.
+* Os comandos são registrados **apenas globalmente** e as cópias antigas por servidor são apagadas (uma vez por servidor).
+* Todos os comandos funcionam como `/comando` ou `@Bot comando argumentos` (no privado do bot não precisa mencionar). Aliases em português: `@Bot saldo`, `@Bot pagar @user 0.5`, `@Bot extrato`…
+* Configuração: dono do servidor / admins (`/set`, `/api`, `/config`), **staff** (configura qualquer servidor, `/remind`, `/status`) e **donos do bot** (`/staff`). Donos e staff ficam no `config.yml` (e o dono pode adicionar staff em tempo real com `/staff`).
+* A fila de DMs só roda com o bot online; se o bot estiver desativado/inacessível ela fica parada e volta sozinha quando ele conectar.
 
-cloudflared login
-```
-If you are using Windows, open PowerShell as admin inside the cloudflared folder and execute:
-```
-cloudflared tunnel login
+### Pagamentos por QR (app de celular)
+* `POST /api/pay/request` cria um QR de cobrança (valor fixo ou livre, descrição, validade, reutilizável para balcão).
+* Quem paga escaneia → `POST /api/pay/scan` diz o que é → `POST /api/pay/request/:id/pay`. Pagamento e baixa do pedido acontecem na mesma transação: um QR de uso único nunca é pago duas vezes.
+* Cabeçalho `Idempotency-Key`: se a rede do celular repetir a requisição, o pagamento não é feito de novo.
+* `GET /api/pay/request/:id?wait=25&since=N` (long-poll): a tela de quem recebe atualiza na hora em que o pagamento cai.
+* QR fixo de usuário ("me envie coins"): `/api/pay/me`, imagens prontas em `/api/pay/request/:id/qr.png` e `/api/qr/user/:id.png`.
+* Página web `/pay/<id>` e `/pay/u/<id>`: o QR funciona até sem o app (abre na câmera do celular). No Discord: `/qr` (cobrar) e `/myqr` (receber).
+* Guia completo: `/terms/documentation.html#app`.
 
-cloudflared login
-```
-Create the json config "coin-bot.json":
-```
-cloudflared tunnel --config=coin-bot.json run
-```
-Put those files renamed as coin-bot.json and cert.perm in the cloudflared folder.
+### Dinheiro sem ponto flutuante
+Todo saldo é um **inteiro de sats** (1 coin = 100.000.000 sats) no banco, na API e internamente. A conversão para texto usa só divisão inteira, e cada transferência é um único `UPDATE ... WHERE coins >= ?` + registro no livro-razão dentro da mesma transação. A cada 30 min o sistema confere `SOMA(saldos) == total emitido`.
 
-And before start the project, use...
+### Segurança
+Senhas com *scrypt* + salt, tokens de sessão aleatórios (o banco guarda só o SHA-256), sessões de 24h, bloqueio de IP após erros de login/cartão, limite de criação de contas por IP e por dispositivo, corpo máximo de 16 KB, cabeçalhos de segurança, proteção contra *path traversal*. IPs ficam só em memória; para o limite de contas é guardado apenas um HMAC irreversível por até 24h.
 
-Create a tunnel:
-```
-cloudflared tunnel create tunnel_name
-```
-Edit the config.yml of cloudflared folder to use your domain setup:
-```
-tunnel: tunnel-name
-credentials-file: ./coin-bot.json   # ou o nome do .json que você tem
-origincert: ./cert.pem
+### Cloudflare
+Com `cloudflare.enabled: true` o IP real vem do `CF-Connecting-IP` **apenas** se a conexão vier da Cloudflare (faixas oficiais) ou do `cloudflared` na mesma máquina. Túnel nomeado e túnel rápido (trycloudflare) são ligados pelo `config.yml` (veja `cloudflared/README.txt`).
 
-ingress:
-  - hostname: coin.your_domain.me
-    service: http://localhost:26450
-  - service: http_status:404
+### Desempenho (medido, honesto)
+Teste local (cliente e servidor na mesma máquina, 1 processo, SQLite embutido):
+| Operação | Resultado |
+|---|---|
+| `GET /api/stats` (cache) | ~18.800 req/s |
+| `GET` saldo autenticado | ~18.500 req/s |
+| `POST /api/transfer` (escrita real no banco, atômica) | ~9.600 req/s |
+| Operações internas no banco (lote/group commit) | ~100.000 op/s |
+| RAM do processo (API + banco, após 110 mil requisições) | ~60 MB após GC, pico ~170 MB |
 
-```
-When those files are created, the prompt returns the file location for you to seach UwO
+* Acima da capacidade, as requisições **esperam numa fila justa** (pequeno atraso) em vez de travar ou dar erro.
+* "10 milhões de operações por segundo" num único processo Node não é fisicamente realista. Para ir além: Cloudflare na frente (cache das páginas estáticas), CPU mais forte e/ou várias instâncias.
+* O bot usa caches mínimos do discord.js + otimizador de memória (com ou sem `--expose-gc`), ficando bem abaixo de 500 MB mesmo com milhares de servidores. `npm start` já usa `--expose-gc --max-old-space-size=384`.
 
-All the times you run those commands, the console will show you where the files appear, and you need to go there to copy them and paste in the cloudflared folder of the project.
-You will need to rename the files as your config.yml is listening.
+---
 
-Finished, you now has SSL secured API URL and site hosted :D
+## 🇺🇸 English
 
-Or you can use a random URL only to host a SSL secured URL without your own domain (free):
-```
-# .env file:
-
-TEMP_TUNNEL_ENABLED=true < leave this on (true)
-TEMP_TUNNEL_PORT=3000 < change the port for the port you use
-TEMP_TUNNEL_LOCAL_HOST=127.0.0.1 < leave this like this or 0.0.0.0
-
+### Quick start
+```bash
+npm install
+# edit config.yml (discord.token, discord.client_id, discord.owners ...)
+npm start            # node index.js | start.bat | ./start.sh
 ```
 
+### Using it as a module
+```js
+// CommonJS
+const bank = require('./index.js');          // autostarts unless system.autostart: false
+await bank.ready;
+bank.logic.stats();
 
-      Here is the configurations:
-
+// ES modules
+import bank, { start, stop } from './index.mjs';
+await start({ overrides: { api: { port: 8080 } } });
 ```
-###########################################
-# DISCORD CONFIGURATION
-###########################################
-DISCORD_TOKEN=your_bot_token
-CLIENT_ID=000000000000
+Set `system.autostart: false` (or env `COIN_BANK_NO_AUTOSTART=1`) to start manually.
 
-###########################################
-# ECONOMY CONFIGURATION
-###########################################
-AMOUNT=1.00000000
-WAIT=10000
+### Architecture
+`config.yml → lib/memory → database.js → logic.js → api.js → bot.js → tunnels`
+* **database.js** is the only module touching the disk: async group-commit write queue (each op in its own SAVEPOINT), write-through LRU caches, automatic migration of the old database, chunked retention cleanup, WAL checkpoints, online backups, ledger audit.
+* **logic.js** holds all business rules, the DM outbox (active only while the bot is online), balance/network charts and PNG/PDF receipts with QR verification.
+* **api.js** keeps every legacy endpoint and adds the ones the new website needed: `/api/stats`, `/api/stats/history`, `/api/stats/recent`, `/tx/:id`, receipts, charts, `/api/me`, `/api/bill/:id`. Full reference: `site/terms/documentation.html` (served at `/terms/documentation.html`).
+* **bot.js**: global-only slash commands (servers + DMs), per-guild copies purged, defer-first interactions (never "interaction failed"), `@Bot command` mentions with EN/PT aliases, embeds with the bot avatar thumbnail, API text protocol (`active`, `bill`, `paybill`, `verify`) kept for other bots.
 
-###########################################
-# API QUEUE CONFIGURATION
-###########################################
-
-# Máximo de bytes armazenados na fila (default: 512 KB)
-QUEUE_MAX_BYTES=524288
-
-# Máximo de operações que a fila aceita por segundo (default: 500)
-QUEUE_MAX_OPS=1000
-
-# Tempo máximo que o cliente pode ficar aguardando o processamento da fila (default: 30000 ms)
-QUEUE_WAIT_TIMEOUT_MS=30000
-
-# Tempo que o resultado de uma operação fica armazenado (default: 24h)
-QUEUE_RESULT_TTL_MS=60000
-
-# Velocidade do tick do worker da fila (default: 250 ms)
-QUEUE_TICK_MS=10
-
-
-###########################################
-# CACHE CONFIGURATION
-###########################################
-
-# Ativar/desativar cache (true para ativado | false para desativado)
-# Default do código = true ("ativado")
-CACHE_ENABLED=true
-
-# Máximo de operações total no cache (default: 20000)
-CACHE_MAX_TOTAL_OPS=10000
-
-# Máximo de operações por IP (default: 2000)
-CACHE_MAX_PER_IP=20
-
-# Intervalo entre flushes do cache para a fila (default: 200ms)
-CACHE_FLUSH_INTERVAL_MS=10
-
-# Quantidade máxima de operações movidas do cache para a fila em cada flush (default: 50)
-CACHE_FLUSH_BATCH=500
-
-
-###########################################
-# OVERLOAD THRESHOLDS
-###########################################
-
-# Percentual de uso da fila que define "sobrecarga" (default: 0.70)
-QUEUE_HIGH_WATERMARK_PCT=0.70
-
-# Percentual de uso da fila que define "crítico" (default: 0.90)
-QUEUE_CRITICAL_WATERMARK_PCT=0.90
-
-
-###########################################
-# RATE LIMITING (TOKEN BUCKET)
-###########################################
-
-# Tokens por segundo por IP (default: 10)
-RATE_LIMIT_PER_IP=10
-
-# Quantidade de tokens máxima que um IP pode acumular (burst) (default: 10)
-RATE_LIMIT_BURST=10
-
-
-###########################################
-# MISC
-###########################################
-
-# Tamanho máximo permitido para o JSON do body (default: "1mb")
-REQUEST_BODY_LIMIT=1mb
-
-###########################################
-# TUNNEL
-###########################################
-
-CLOUDFLARE_ENABLED=true
-CLOUDFLARE_TUNNEL_NAME=coin-bot
-CLOUDFLARE_HOSTNAME=coin.your_domain.me
-CLOUDFLARE_CREDENTIALS=cloudflared/coin-bot.json
-PORT=26450
-
-LT_LOCAL_HOST=127.0.0.1
-API_PORT=26450
-
-###########################################
-# TEMP TUNNEL
-###########################################
-
-TEMP_TUNNEL_ENABLED=true
-TEMP_TUNNEL_PORT=26450
-TEMP_TUNNEL_LOCAL_HOST=127.0.0.1
-
+### Folder layout
+```
+index.js · index.mjs · config.yml · database.js · logic.js · api.js · bot.js
+commands/   27 bilingual commands
+lib/        config, yaml, money, cache, qr, memory, tunnel, i18n, botui
+site/       index.html, tx.html, pay.html (QR payments), terms/{terms,privacy,documentation}.html, icons
+assets/     icon.png (receipts / charts), logo.png
+cloudflared/  put the cloudflared binary + tunnel credentials here
+playerList/ database.db (+ backups/) — created automatically
 ```
 
-------
-<h1 align="center">
-
-[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
-
-</h1>
+### License
+Public domain (Unlicense) — see `LICENSE.txt`. System developed by FoxOficial.

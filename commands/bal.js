@@ -1,39 +1,16 @@
-// commands/bal.js
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUser, fromSats } = require('../database');
-
+'use strict';
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('bal')
-    .setDescription('Show your balance'),
-
-  async execute(interaction) {
-    // Defer ephemerally to give us time
-    await interaction.deferReply({ ephemeral: true }).catch(() => null);
-
-    let userRecord;
-    try {
-      userRecord = getUser(interaction.user.id);
-      if (!userRecord) throw new Error('User not found');
-    } catch (err) {
-      console.error('❌ Failed to load user in /bal:', err);
-      return interaction.editReply('❌ Could not retrieve your balance. Please try again later.')
-        .catch(() => null);
-    }
-
-    // Convert satoshis to human-readable coins
-    const displayBalance = fromSats(userRecord.coins ?? 0);
-
-    // Build and send embed
-    const embed = new EmbedBuilder()
-      .setColor('Gold')
-      .setTitle('💰 Your Balance')
-      .setDescription(`You have **${displayBalance} coins**.`);
-    
-    try {
-      await interaction.editReply({ embeds: [embed] });
-    } catch (err) {
-      console.error('❌ Failed to send /bal reply:', err);
-    }
-  },
+  name: 'bal', names: { pt: 'saldo' }, category: 'economy',
+  aliases: { en: ['balance', 'wallet', 'money'], pt: ['carteira', 'dinheiro'] },
+  description: { en: 'Shows your balance, rank and next reward', pt: 'Mostra seu saldo, ranking e próxima recompensa' },
+  async run(ctx, { ui }) {
+    await ctx.send({
+      embeds: [ui.balanceEmbed(ctx, ctx.userId, ctx.user.username)],
+      components: [ui.row(
+        ui.btn('cb:claim', ctx.l('Claim', 'Resgatar'), 3, '🎁'),
+        ui.btn(`cb:graph:png:${ctx.userId}:30`, ctx.l('Chart', 'Gráfico'), 2, '📊'),
+        ui.btn(`cb:hist:${ctx.userId}:1:${ctx.userId}`, ctx.l('Statement', 'Extrato'), 2, '📖')
+      )]
+    });
+  }
 };

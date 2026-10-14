@@ -1,39 +1,13 @@
-// commands/card.js
-const { SlashCommandBuilder } = require('discord.js');
-const { createCard, getCardCodeByOwnerId } = require('../database');
-
+'use strict';
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('card')
-    .setDescription('Generates or retrieves your Coin Card'),
-
-  async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true }).catch(() => null);
-
-    try {
-      const userId = interaction.user.id;
-
-      // 1) Tenta pegar o card existente usando APENAS funções do database.js
-      let code = getCardCodeByOwnerId(userId);
-
-      // 2) Se não existir, cria usando createCard()
-      if (!code) {
-        code = createCard(userId);
-      }
-
-      // 3) Envia resposta
-      return interaction.editReply({
-        content: `
-        💳 Your Card: ||\`\`\`${code}\`\`\`||
-        💳 Click: ||\`${code}\`||
-        `
-      });
-
-    } catch (err) {
-      console.error("❌ Error in /card:", err);
-      return interaction.editReply({
-        content: '❌ Could not generate your card. Please try again later.'
-      }).catch(() => null);
-    }
-  },
+  name: 'card', names: { pt: 'cartao' }, category: 'account',
+  aliases: { en: ['mycard'], pt: ['cartão', 'meucartao'] },
+  description: { en: 'Shows your Coin Card (payment code for the API)', pt: 'Mostra seu Coin Card (código de pagamento da API)' },
+  async run(ctx, { ui, logic }) {
+    const code = await logic.getCard(ctx.userId);
+    await ctx.sendPrivate({ embeds: [ui.embed(ctx, {
+      title: ctx.l('💳 Your Coin Card', '💳 Seu Coin Card'), color: ui.COLORS.purple,
+      description: `||\`\`\`${code}\`\`\`||\n${ctx.l('Use it in the browser extension, Minecraft plugin, stores and other bots.', 'Use na extensão do navegador, plugin de Minecraft, lojas e outros bots.')}\n\n⚠️ ${ctx.l('Anyone with this code can spend your coins. Leaked it? Use `/cardreset`.', 'Quem tiver este código pode gastar seus coins. Vazou? Use `/resetarcartao`.')}`
+    })] });
+  }
 };
